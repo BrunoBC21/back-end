@@ -4,7 +4,8 @@ mongoose.set("strictQuery", true);
 
 mongoose.connect('mongodb://127.0.0.1:27017/beac')
 .then(()=>{
-    console.log("Conectado")
+    console.log("Conectado");
+    
 })
 .catch((error) =>{
     console.error(error)
