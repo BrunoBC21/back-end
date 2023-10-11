@@ -108,18 +108,22 @@ const clienteController = {
             console.log(error)
         }
     },
-    login: async(req, res)=> {
+    login: async (req, res) => {
         try {
-            
-            const resposta = await ClienteModel.find({nome: req.body.nome, senha: req.body.senha});
-            res.status(200).json({resposta})
-            console.log("d")
-
+            const { nome, senha } = req.body;
+    
+            const user = await ClienteModel.findOne({ nome, senha });
+    
+            if (user) {
+                res.status(200).json({ data: user, msg: "Login successful" });
+            } else {
+                res.status(401).json({ error: "Invalid credentials" });
+            }
         } catch (error) {
-            console.log(error)
-        }
-
-    }
+            console.error(error);
+            res.status(500).json({ error: "Error during login" });
+        }
+    }
     
 }
 

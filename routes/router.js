@@ -1,8 +1,16 @@
-const router = require("express").Router();
-//const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const clienteController = require("../controllers/clienteControllers");
 
-const clienteRouter = require("./cliente.js")
+router.route("/cliente")
+  .post(clienteController.create)
+  .get(clienteController.getAll);
 
-router.use("/", clienteRouter);
+router.route("/cliente/:id")
+  .get(clienteController.getDados)
+  .delete(clienteController.delete)
+  .put(clienteController.update);
 
-module.exports = router
+router.route("/login").post(clienteController.login);
+
+module.exports = router;
