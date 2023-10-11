@@ -9,6 +9,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/beac')
 })
 .catch((error) =>{
     console.error(error)
+    
 })
 
 // name: cortespolemicos
