@@ -8,8 +8,8 @@ const clienteController = {
                 telefone: req.body.telefone,
                 email: req.body.email,
                 senha: req.body.senha,
-                foto: req.body.foto,
-                status: req.body.status
+                //foto: req.body.foto,
+                //status: req.body.status
             }
             // Validação de email e telefone
             const validarEmail = /\w+@\w+\.\w/;
@@ -17,9 +17,28 @@ const clienteController = {
 
 
             if (validarEmail.test(cliente.email) == true && validarTelefone.test(cliente.telefone) == true && cliente.telefone.length < 15) {
+                const {telefone, email} = cliente
+                const user = await ClienteModel.findOne({telefone, email});
+
+                if (user) {
+                    res.status(409).json({error:"Email e número de telefone já existem no sistema"});
+                    return
+                }
+
+                else if (await ClienteModel.findOne({email})) {
+                
+                    res.status(409).json({error:"Email já existe no sistema"});
+                    return
+                }
+
+                else if (await ClienteModel.findOne({telefone})) {
+                    res.status(409).json({error:"Telefone já existe no sistema"});
+                    return
+                }
                 
                 const response = await ClienteModel.create(cliente);
                 res.status(201).json({response, msg:"Serviço criado com sucesso"})
+                
 
             }
             else if ((validarTelefone.test(cliente.telefone) == false || cliente.telefone.length > 14) && validarEmail.test(cliente.email) == false) {

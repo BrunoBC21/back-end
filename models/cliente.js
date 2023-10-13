@@ -19,13 +19,14 @@ const clienteSchema = new Schema ({
 
     senha: {
         type: String,
-        required: false
+        required: true
     },
 
     foto: {
         type: String,
         required: false
     },
+
 
     status: {
         type: Boolean,
