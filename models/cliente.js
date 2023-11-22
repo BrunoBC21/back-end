@@ -9,7 +9,7 @@ const clienteSchema = new Schema ({
 
     telefone: {
         type: String,
-        required: false
+        required: true
     },
 
     email: {
@@ -27,12 +27,15 @@ const clienteSchema = new Schema ({
         required: false
     },
 
-
     status: {
         type: Boolean,
         required: false
     },
 
+    role: {
+        type: String,
+        required: true
+    }
 
 }, {timestamps: true});
 

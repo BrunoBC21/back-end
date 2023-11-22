@@ -1,34 +1,25 @@
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
-const {adminSchema} = require("./admin");
-
 const servicoSchema = new Schema({
-    admin: [adminSchema],
-
-    titulo: {
+    modalidade: {
         type: String,
         required: true
     },
 
-    duracao: {
-        type: Number,
-        required: true
-    },
-
     preco: {
-        type: Number,
+        type: String,
         required: true
     },
 
     recorrencia: {
         type: Number,
-        required: true
+        required: false
     },
 
     descricao: {
         type: String,
-        required: true
+        required: false
     },
 
     status: {

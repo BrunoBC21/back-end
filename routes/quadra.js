@@ -1,28 +1,27 @@
-/*const express = require("express")
+const express = require("express")
 const router = express.Router()
 
-const quadraController = require("../controllers/quadraControllers");
-const clienteController = require("../controllers/clienteControllers");
+const quadraController = require("../controllers/quadraControllers")
 
 router
-    .route("/cliente")
+    .route("/quadra")
     .post((req, res) => quadraController.create(req, res));
 
 router
-    .route("/cliente")
+    .route("/quadra")
     .get((req, res) => quadraController.getAll(req, res));
 
 router
-    .route("/cliente/:id")
-    .get((req, res) => clienteController.getDados(req, res));
+    .route("/quadra/:id")
+    .get((req, res) => quadraController.getDados(req, res));
 
 router
-    .route("/cliente/:id")
-    .delete((req, res) => clienteController.delete(req, res));
+    .route("/quadra")
+    .delete((req, res) => quadraController.delete(req, res));
 
 router
-    .route("/cliente/:id")
-    .put((req, res) => clienteController.update(req, res))
+    .route("/cliente")
+    .put((req, res) => quadraController.update(req, res));
       
 
-module.exports = router*/
+module.exports = router

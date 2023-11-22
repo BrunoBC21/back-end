@@ -1,16 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const clienteController = require("../controllers/clienteControllers");
 
-router.route("/cliente")
-  .post(clienteController.create)
-  .get(clienteController.getAll);
+const quadra = require("./quadra");
+const servico = require("./servico");
+const horario = require("./horario");
+const agendamento = require("./agendamento");
 
-router.route("/cliente/:id")
-  .get(clienteController.getDados)
-  .delete(clienteController.delete)
-  .put(clienteController.update);
+router.use("/", horario);
 
-router.route("/login").post(clienteController.login);
+router.use("/", servico);
+ 
+router.use("/", quadra);
 
-module.exports = router;
+router.use("/", agendamento);
+
+module.exports = router;
