@@ -56,9 +56,14 @@ const agendamentoController = {
             const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
             //Pegando todas as quadras/agendamentos com o id de servico selecionado.
-            const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id")
+            const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id");
 
-            async function asf (data, hora){
+            const idHorario = await horarioModel.findOne()
+            const horarioIncio = parseInt(idHorario.inicio);
+            const horarioFinal = parseInt(idHorario.fim);
+            const horasEstabelecidas = 6
+
+            async function buscarHorariosDisponiveis (data, hora){
                 const quadrasDisponiveis = []
                 const array = []
 
@@ -70,25 +75,26 @@ const agendamentoController = {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
                             const numeroQuadra = quadra.quadra.numero
         
-                            array.push(numeroQuadra+ hora)
+                            array.push(numeroQuadra+" "+hora)
                         }
                         console.log(data)
                 }
                 return array
             }
-
             const  promises=[]
-            for (let i = 0; i < data[2].horario.length; i++) {
+            const array =[]
+
+            for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
-                const dataHorario = data[0]+'-'+data[1]+"-"+data[2].horario[i];
-                promises.push(asf(dataHorario, data[2].horario[i]))
+                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioIncio +i);
+                promises.push(buscarHorariosDisponiveis(dataHorario, horarioIncio + i))
             }
 
             const p = await Promise.all(promises)
             const horarioDisponiveisQuadras = p.flat()
 
             res.json({horarioDisponiveisQuadras})
-
+            
         } catch (error) {
             console.log(error)
         }
