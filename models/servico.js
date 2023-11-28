@@ -24,7 +24,9 @@ const servicoSchema = new Schema({
 
     status: {
         type: Boolean,
-        required: true
+        required: true,
+        enum: ['A', 'I'],
+        default: 'A'
     }
 
 }, {timestamps: true});

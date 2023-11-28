@@ -1,14 +1,13 @@
-const {QuadraServico: quadraServicoModel} = require("../models/quadra_servico");
+const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
 
 const quadraServicoController = {
     create: async (req, res) => {
         try {
-            const quadraServico = {
+            const quadraServicos = {
                 quadra: req.body.quadra,
-                servico: req.body.servico,
-                status: req.body.status
+                servico: req.body.servico
             }
-            const response = await quadraServicoModel.create(quadraServico);
+            const response = await quadraServicoModel.create(quadraServicos);
             res.status(201).json({response, msg: "Serviço criado com sucesso!"});
 
         } catch (error) {
@@ -18,14 +17,8 @@ const quadraServicoController = {
 
     getAll: async (req, res) => {
         try {
-            if(req.body.servico == 1) {
-               const quadraGet = await quadraServicoModel.findOne({id:"6547e880443d7a2679c42cc6"}).populate("quadra").populate("servico");
-               const status = quadraGet.servico.status = false;
-               await quadraServicoModel.updateOne({status})
-               const quadra = quadraGet.quadra.numero;
-               //const status = quadraGet.status;
-               res.json({quadraGet});
-            }        
+            const quadras = await quadraServicoModel.find();
+            res.json({quadras})
 
         } catch (error) {
             console.error(error)
@@ -67,4 +60,4 @@ const quadraServicoController = {
     }
 }
 
-//module.exports = quadraServicoController
+module.exports = quadraServicoController

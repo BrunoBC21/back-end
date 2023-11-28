@@ -5,6 +5,7 @@ const quadra = require("./quadra");
 const servico = require("./servico");
 const horario = require("./horario");
 const agendamento = require("./agendamento");
+const quadraServico = require("./quadraServico");
 
 router.use("/", horario);
 
@@ -13,5 +14,7 @@ router.use("/", servico);
 router.use("/", quadra);
 
 router.use("/", agendamento);
+
+router.use("/", quadraServico)
 
 module.exports = router;

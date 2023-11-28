@@ -6,10 +6,14 @@ const agendamentoController = require("../controllers/agendamentoController");
 router
     .route("/agendamento")
     .post((req, res)=> agendamentoController.create(req, res))
-    .get((req, res)=> agendamentoController.getAll(req, res));
+    .get((req, res)=> agendamentoController.getQuadras(req, res));
 
 router
-    .route("/servicoquadra")
+    .route("/quadras-disponiveis")
     .post((req, res)=> agendamentoController.getServicosQuadras(req, res));
+
+router
+    .route("/servico-quadra")
+    .post((req, res)=> agendamentoController.associarQuadraServico(req, res));
 
 module.exports = router

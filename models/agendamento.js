@@ -5,7 +5,7 @@ const agendamentoSchema = new Schema({
     
     data: {
         type: String,
-        required: true
+        required: true,
     },
 
     valor: {

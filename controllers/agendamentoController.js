@@ -1,6 +1,8 @@
-const { Collection } = require("mongoose");
 const {Agendamento: agendamentoModel} = require("../models/agendamento");
 const {Servico: servicoModel} = require("../models/servico");
+const {Quadra: quadraModel} = require("../models/quadra");
+const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
+const {Horario: horarioModel} = require("../models/horario");
 
 const agendamentoController = {
     create: async (req, res) => {
@@ -23,137 +25,78 @@ const agendamentoController = {
         }
     },
 
-    getAll: async (req, res) => {
+    associarQuadraServico: async (req, res) => {
         try {
-            const quadras = await agendamentoModel.find({status: 'D'}).populate("servico")
-            if (quadras) {
-                res.json({quadras})
-            }
-    
+            const {quadra, servico} = req.body
+
+            //Pegando os ids do número da quadra e do servico.
+            const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id");
+            const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
+            const idHorario = await horarioModel.findOne().select("_id");
+        
+            //Criando a associação entre quadra e servico
+            const quadraServico = {data: 0, horario: idHorario, quadra: idQuadra, servico: idServico}
             
-            //const deleteCliente = await agendamentoModel.findByIdAndDelete("655a424bb0ba1eab7d0ff87c");
-            /*if(req.body.servico == 1) {
-               const quadraGet = await agendamentoModel.findOne({id:"6547e880443d7a2679c42cc6"}).populate("quadra").populate("servico");
-               const status = quadraGet.servico.status = false;
-               await quadraServicoModel.updateOne({status})
-               const quadra = quadraGet.quadra.numero;
-               //const status = quadraGet.status;
-               res.json({quadraGet});
-            }*/        
+            const response = await agendamentoModel.create(quadraServico);
+            res.status(201).json({response, msg: "Associação criada com sucesso!"})
+
+
 
         } catch (error) {
             console.error(error)
         }
+
+
     },
     getServicosQuadras: async (req, res) => {
         try {
             const {servico, data} = req.body;
-            const idServico = await servicoModel.find({modalidade: servico}).select("_id");
-            diasDisponiveis(servico, data)
 
-            async function diasDisponiveis(servico, data) {
-                // Dias para verificação
-                const a = data[0]+'-'+data[1]+'-'+data[2]
-                const date = new Date();
+            //Pegando o id do servico.
+            const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
-                const verificarDate = (date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear())
-                if(data[1] == verificarDate || data[1] > verificarDate){
-                    const quatroH = data[0]+'-'+data[1]+"-16"
-                    const cincoH = data[0]+'-'+data[1]+"-17"
-                    const seiH = data[0]+'-'+data[1]+"-18"
-                    const seteH = data[0]+'-'+data[1]+"-19"
-                    const oitoH = data[0]+'-'+data[1]+"-20"
-                    const noveH = data[0]+'-'+data[1]+"-21"
-                    const dezH = data[0]+'-'+data[1]+"-22"
+            //Pegando todas as quadras/agendamentos com o id de servico selecionado.
+            const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id")
 
-                    //const servicod = await agendamentoModel.find({"servico":idServico, $or:[{data: quatroH}, {data: cincoH}], status: 'C'}).populate("servico")
-                    //res.json({servicod})
-                    const array = []
-                    let tt
-                    if(tt = await agendamentoModel.find({servico: idServico, data: quatroH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null) {
-                            array.push()
+            async function asf (data, hora){
+                const quadrasDisponiveis = []
+                const array = []
+
+                for (let e = 0; e < quadraServico.length; e++) {
+                        //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({_id: quadraServico[e], data: data}).select("_id"))
+            
+                        if(quadrasDisponiveis[e] == null) {
+                            const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
+                            const numeroQuadra = quadra.quadra.numero
+        
+                            array.push(numeroQuadra+ hora)
                         }
-                    }
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: cincoH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(cincoH)
-                        }
-                    }
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: seiH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(seiH)
-                        }
-                    }
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: seteH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(seteH)
-                        }
-                    }  
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: oitoH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(oitoH)
-                        }
-                    }
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: noveH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(noveH)
-                        }
-                    }
-
-                    if (tt = await agendamentoModel.find({servico: idServico, data: dezH}).select("_id")) {
-                        ass = await agendamentoModel.findById(tt)
-                        if(ass == null){
-                            array.push(dezH)
-                        }  
-                    }  
-                    
+                        console.log(data)
                 }
-                else {
-                    res.json({msg: "erro"})
-                }
-  
-
-
-
+                return array
             }
 
+            const  promises=[]
+            for (let i = 0; i < data[2].horario.length; i++) {
+                // Tratando o formato de data que está vindo do front-end.
+                const dataHorario = data[0]+'-'+data[1]+"-"+data[2].horario[i];
+                promises.push(asf(dataHorario, data[2].horario[i]))
+            }
 
-                //const io = await agendamentoModel.findOneAndUpdate({id:"655df139c824eff2cbe43b19", status: 'A'})
+            const p = await Promise.all(promises)
+            const horarioDisponiveisQuadras = p.flat()
 
-                
-  
-            
-            //console.log(a)
-            
-            //const update =  await agendamentoModel.f({id:"655d77041d5f1eaae410170c", data:})
+            res.json({horarioDisponiveisQuadras})
 
-   
-           /*/ 
-            */
-
-            var dataAtual = new Date().toLocaleString();
-            console.log(dataAtual)
-
-           /*const data = new Date()
-            const dataSemanal = data.getDay();
-            const hora = data.toLocaleTimeString()
-
-            console.log(dataSemanal, hora)*/
-            var da = new Date()
-            console.log(da)
-                
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getQuadras: async (req, res) => {
+        try {
+            const quadras = await agendamentoModel.find().populate("quadra").populate("servico")
+            res.json({quadras})
 
         } catch (error) {
             console.log(error)
