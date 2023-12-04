@@ -23,7 +23,7 @@ router
     .route("/cliente/:id")
     .put((req, res) => clienteController.update(req, res));
 
-    router
+router
     .route("/login")
     .post((req, res)=> clienteController.login(req, res))
 

@@ -6,14 +6,14 @@ const clienteController = {
     create: async(req, res)=> {
         try {
             // Criptografando senha de usuário
-            //const saltRounds = bcrypt.genSalt(12);
-            //const senhaHash = await bcrypt.hash(req.body.senha, saltRounds);
+            const saltRounds = bcrypt.genSalt(12);
+            const senhaHash = await bcrypt.hash(req.body.senha, 12);
 
             const cliente = {
                 nome: req.body.nome,
                 telefone: req.body.telefone,
                 email: req.body.email,
-                senha: req.body.senha//senhaHash,
+                senha: senhaHash,
                 //foto: req.body.foto,
                 //status: req.body.status
             }
@@ -135,13 +135,14 @@ const clienteController = {
             console.log(error)
         }
     },
-    /*login: async (req, res) => {
+
+    login: async (req, res) => {
         try {
             const { email, senha } = req.body;
 
             // Checando se os campos estão vazios.
             if(!email && !senha) {
-                res.status(422).json({msg: "Email e senha são obrigatórios"});
+                return res.status(422).json({msg: "Email e senha são obrigatórios"});
             }
              
             else if(!email) {
@@ -167,22 +168,14 @@ const clienteController = {
 
             //Criando o token
             const secret = process.env.SECRET
-
-            const token = jwt.sign({
-                id: user._id
-            }, secret,)
+            const token = jwt.sign({subject: user.id}, secret, {expiresIn: "1d"})
 
             res.status(200).json({msg: "Sucesso na autenticação", token});
-          
-     
 
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: "Error during login" });
+            res.status(500).json({ error: "Error during login"});
         }
-    }*/
-
-    
+    }
 }
-
 module.exports = clienteController

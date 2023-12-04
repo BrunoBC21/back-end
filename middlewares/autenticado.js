@@ -1,29 +1,31 @@
-const {verify} = require("jsonwebtoken");
+//const {verify} = require("jsonwebtoken");
+const  jwt = require("jsonwebtoken")
 
-const autenticar = (req, res, next)=> {
-    try {
+const autenticarUsuario = (req, res, next)=> {
+
+        //const{authorization} = req.headers
         const cabecalhoAutenticacao = req.headers.authorization;
 
         if(!cabecalhoAutenticacao) {
-            res.status(422).json({msg: "Token ausente!"});
+            return res.json({msg: "Token ausente!"});
         }
     
         const [, token] = cabecalhoAutenticacao.split(" ");
         const secret = process.env.SECRET;
-    
         try {
-            const decodificar = verify(token, secret)
-            console.log(decodificar);
-            
-            next();
+            jwt.verify(token, secret, (err, decoded) => {
+                if (err) {
+                    console.error('Falha na verificação do token:', err);
+                } else {
+                    //console.log('Token verificado com sucesso:', decoded);
+                    next()
+                }
+            });
     
         } catch (error) {
-            console.log(error);
+            console.log({msg: error});
         }
-
-    } catch (error) {
-        console.log(error);
-    }
 
     
 }
+module.exports = autenticarUsuario;

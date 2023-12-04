@@ -58,18 +58,29 @@ const agendamentoController = {
             //Pegando todas as quadras/agendamentos com o id de servico selecionado.
             const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id");
 
+            const quadra = [], idQuadra = []
+            for (let i = 0; i < quadraServico.length; i++) {
+                quadra.push(await agendamentoModel.findOne({_id: quadraServico[i]}).populate("quadra").select("_id"))
+                idQuadra.push(quadra[i].quadra.id)
+                //console.log(quadra)
+                
+            }
+            console.log(idQuadra)
+            //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
-            const horarioIncio = parseInt(idHorario.inicio);
+            const horarioInicial = 16
             const horarioFinal = parseInt(idHorario.fim);
-            const horasEstabelecidas = 6
+
+            //Subtraindo a hora do fim do espediente pela de início.
+            const horasEstabelecidas = (horarioFinal - horarioInicial)
 
             async function buscarHorariosDisponiveis (data, hora){
                 const quadrasDisponiveis = []
                 const array = []
 
-                for (let e = 0; e < quadraServico.length; e++) {
+                for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
-                        quadrasDisponiveis.push(await agendamentoModel.findOne({_id: quadraServico[e], data: data}).select("_id"))
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({_id: idQuadra[e], data: data}).select("_id"))
             
                         if(quadrasDisponiveis[e] == null) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
@@ -77,7 +88,6 @@ const agendamentoController = {
         
                             array.push(numeroQuadra+" "+hora)
                         }
-                        console.log(data)
                 }
                 return array
             }
@@ -86,8 +96,8 @@ const agendamentoController = {
 
             for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
-                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioIncio +i);
-                promises.push(buscarHorariosDisponiveis(dataHorario, horarioIncio + i))
+                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioInicial +i);
+                promises.push(buscarHorariosDisponiveis(dataHorario, horarioInicial + i))
             }
 
             const p = await Promise.all(promises)

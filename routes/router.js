@@ -6,6 +6,9 @@ const servico = require("./servico");
 const horario = require("./horario");
 const agendamento = require("./agendamento");
 const quadraServico = require("./quadraServico");
+const cliente = require("./cliente");
+
+router.use('/', cliente);
 
 router.use("/", horario);
 
