@@ -62,15 +62,16 @@ const agendamentoController = {
             for (let i = 0; i < quadraServico.length; i++) {
                 quadra.push(await agendamentoModel.findOne({_id: quadraServico[i]}).populate("quadra").select("_id"))
                 idQuadra.push(quadra[i].quadra.id)
-                //console.log(quadra)
+                console.log(idQuadra)
                 
             }
-            console.log(idQuadra)
+
+            console.log(await agendamentoModel.findOne({_id: idQuadra[0], data: data}).select("_id"))
+            //console.log(idQuadra)
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
             const horarioInicial = 16
             const horarioFinal = parseInt(idHorario.fim);
-
             //Subtraindo a hora do fim do espediente pela de início.
             const horasEstabelecidas = (horarioFinal - horarioInicial)
 

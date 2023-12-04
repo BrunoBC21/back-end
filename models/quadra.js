@@ -9,7 +9,7 @@ const quadraSchema = new Schema({
 
     foto: {
         type: String,
-        required: true
+        required: false
     }
 });
 
