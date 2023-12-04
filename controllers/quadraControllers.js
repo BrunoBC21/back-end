@@ -5,7 +5,7 @@ const quadraController = {
         try {
             const quadra = {
                 numero: req.body.numero,
-                //foto: req.body.foto
+                foto: req.body.foto
             }
             const response = await quadraModel.create(quadra)
             res.status(201).json({response, msg: "Serviço criado com sucesso!"});

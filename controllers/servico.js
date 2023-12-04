@@ -9,7 +9,7 @@ const servicoControllers = {
                 preco: req.body.preco,
                 //recorrencia: req.body.recorrencia,
                 //descricao: req.body.descricao,
-                status: req.body.status,
+                //status: req.body.status,
             }
             const response = await ServicoModels.create(servico);
             res.status(200).json({msg:response});
