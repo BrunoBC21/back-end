@@ -8,8 +8,7 @@ const servicoControllers = {
                 modalidade: req.body.modalidade,
                 preco: req.body.preco,
                 //recorrencia: req.body.recorrencia,
-                //descricao: req.body.descricao,
-                status: req.body.status,
+                //descricao: req.body.descricao
             }
             const response = await ServicoModels.create(servico);
             res.status(200).json({msg:response});

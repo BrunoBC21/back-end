@@ -34,7 +34,7 @@ const clienteSchema = new Schema ({
 
     role: {
         type: String,
-        required: true
+        required: false
     }
 
 }, {timestamps: true});

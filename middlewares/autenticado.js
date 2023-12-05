@@ -15,7 +15,7 @@ const autenticarUsuario = (req, res, next)=> {
         try {
             jwt.verify(token, secret, (err, decoded) => {
                 if (err) {
-                    console.error('Falha na verificação do token:', err);
+                    res.json({'Falha na verificação do token:': err});
                 } else {
                     //console.log('Token verificado com sucesso:', decoded);
                     next()

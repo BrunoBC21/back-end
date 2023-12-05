@@ -23,7 +23,7 @@ const servicoSchema = new Schema({
     },
 
     status: {
-        type: Boolean,
+        type: String,
         required: true,
         enum: ['A', 'I'],
         default: 'A'

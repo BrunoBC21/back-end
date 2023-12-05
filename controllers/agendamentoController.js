@@ -58,16 +58,13 @@ const agendamentoController = {
             //Pegando todas as quadras/agendamentos com o id de servico selecionado.
             const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id");
 
+            //Pegando todos os ids dos número
             const quadra = [], idQuadra = []
             for (let i = 0; i < quadraServico.length; i++) {
                 quadra.push(await agendamentoModel.findOne({_id: quadraServico[i]}).populate("quadra").select("_id"))
                 idQuadra.push(quadra[i].quadra.id)
-                console.log(idQuadra)
-                
             }
-
-            console.log(await agendamentoModel.findOne({_id: idQuadra[0], data: data}).select("_id"))
-            //console.log(idQuadra)
+     
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
             const horarioInicial = 16
@@ -81,7 +78,7 @@ const agendamentoController = {
 
                 for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
-                        quadrasDisponiveis.push(await agendamentoModel.findOne({_id: idQuadra[e], data: data}).select("_id"))
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: data}).select("_id"))
             
                         if(quadrasDisponiveis[e] == null) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
@@ -90,10 +87,10 @@ const agendamentoController = {
                             array.push(numeroQuadra+" "+hora)
                         }
                 }
+                //console.log(quadrasDisponiveis)
                 return array
             }
             const  promises=[]
-            const array =[]
 
             for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
