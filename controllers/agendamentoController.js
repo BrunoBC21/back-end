@@ -70,9 +70,8 @@ const agendamentoController = {
         } catch (error) {
             console.error(error)
         }
-
-
     },
+
     getServicosQuadras: async (req, res) => {
         try {
             const {servico, data} = req.body;
@@ -132,9 +131,12 @@ const agendamentoController = {
             console.log(error)
         }
     },
-    getQuadras: async (req, res) => {
+    
+    getQuadrasAgendadas: async (req, res) => {
         try {
-            const quadras = await agendamentoModel.find().select("_id")
+            const {idQuadra} = req.body;
+
+            const quadras = await agendamentoModel.find({idQuadra}).select("_id")
             let infoAgendamento
             for (let a = 0; a < quadras.length; a++) {
                 const infoAgen = await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente")

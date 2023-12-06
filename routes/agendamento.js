@@ -7,7 +7,7 @@ const autenticao = require("../middlewares/autenticado");
 router
     .route("/agendamento")
     .post((req, res)=> agendamentoController.create(req, res))
-    .get((req, res)=> agendamentoController.getQuadras(req, res));
+    .get((req, res)=> agendamentoController.getQuadrasAgendadas(req, res));
 
 router
     .route("/quadras-disponiveis")

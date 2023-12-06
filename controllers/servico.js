@@ -10,8 +10,12 @@ const servicoControllers = {
                 //recorrencia: req.body.recorrencia,
                 //descricao: req.body.descricao
             }
+            const servicoExistente = await ServicoModels.findOne({servico});
+            if (servicoExistente) {
+                return res.status(201).json({msg: "Servico criado com sucesso!"})
+            }
             const response = await ServicoModels.create(servico);
-            res.status(200).json({msg:response});
+            res.status(201).json({msg: "Servico criado com sucesso"});
 
         } catch (error) {
             console.log(error);
@@ -20,10 +24,9 @@ const servicoControllers = {
 
     getAll: async(req, res) => {
         try {
-            //const quadras = await ServicoModels.findOne({id:"6547d8c52d8557282cff68f4"})
-            //const i = quadras.modalidade
+            const servicosId = await ServicoModels.find()
             
-            //res.json({quadras});
+            res.json({servicosId});
             
         } catch (error) {
             console.log(error)

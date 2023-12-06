@@ -9,8 +9,12 @@ const horarioController = {
                 inicio: req.body.inicio,
                 fim: req.body.fim,
             }
-            const response = await horarioModel.create(horario);
-            res.status(200).json({msg: "Servico criado com sucesso"+ response});
+            const horarioExistente = await horarioModel.findOne(horario);
+            if(horarioExistente) {
+                return res.status(201).json({msg: "Horário criado com sucesso!"})
+            }
+            const resposta = await horarioModel.create(horario);
+            res.status(201).json({msg: "Horário criado com sucesso"});
 
         } catch (error) {
             console.log(error);
