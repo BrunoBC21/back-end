@@ -7,19 +7,44 @@ const {Horario: horarioModel} = require("../models/horario");
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const agendamento = {
-                data: req.body.data,
-                //valor: req.body.valor,
-                //trasacao: req.body.trasacao,
-                horario: req.body.horario,
-                quadra: req.body.quadra,
-                //cliente: req.body.cliente,
-                servico: req.body.servico,
+            const { data, trasacao, horario, quadra, cliente, servico,  horas} = req.body
+
+            //Calculando o preco total dos horários selecionados para o agendamento.
+            const preco = await servicoModel.findOne({servico: servico})
+            const valorTotalQuadras = horas.length * preco.preco
+
+            if(horas.length > 1) {
+                for (let i = 0; i < horas.length; i++) {
+                    const agendamento = {
+                        data: data[0]+"-"+data[1]+"-"+horas[i],
+                        valor: preco.preco,
+                        trasacao: trasacao,
+                        horario: horario,
+                        quadra: quadra,
+                        //cliente: cliente,
+                        servico: servico
+                    }
+                    console.log(agendamento);
+                    const resposta = await agendamentoModel.create(agendamento);
+                }
+                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"})
             }
 
-            const response = await agendamentoModel.create(agendamento);
-            res.status(200).json({response})
-
+            else {
+                const agendamento = {
+                    data: data[0]+"-"+data[1]+"-"+horas,
+                    valor: preco.preco,
+                    trasacao: trasacao,
+                    horario: horario,
+                    quadra: quadra,
+                    //cliente: cliente,
+                    servico: servico
+                }
+                console.log(agendamento);
+                const resposta = await agendamentoModel.create(agendamento);
+                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
+            }
+            
         } catch (error) {
             console.log(error)
         }
@@ -68,7 +93,7 @@ const agendamentoController = {
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
             const horarioInicial = 16
-            const horarioFinal = parseInt(idHorario.fim);
+            const horarioFinal = 22;
             //Subtraindo a hora do fim do espediente pela de início.
             const horasEstabelecidas = (horarioFinal - horarioInicial)
 
@@ -109,8 +134,28 @@ const agendamentoController = {
     },
     getQuadras: async (req, res) => {
         try {
-            const quadras = await agendamentoModel.find().populate("quadra").populate("servico")
-            res.json({quadras})
+            const quadras = await agendamentoModel.find().select("_id")
+            let infoAgendamento
+            for (let a = 0; a < quadras.length; a++) {
+                const infoAgen = await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente")
+
+                infoAgendamento = [{
+                    /*usuario: {
+                        nome: infoAgen.cliente.nome,
+                        email: infoAgen.cliente.email,
+                        telefone: infoAgen.cliente.telefone
+                    },*/
+                    numeroQuadra: infoAgen[a].quadra.numero,
+                    servico: infoAgen[a].servico.modalidade,
+                    data: infoAgen[a].data,
+                    valor: infoAgen[a].valor
+
+                }]
+                console.log(infoAgendamento)
+                
+            }
+            console.log(quadras.length)
+            res.json({infoAgendamento})
 
         } catch (error) {
             console.log(error)

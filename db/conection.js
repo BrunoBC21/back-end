@@ -2,12 +2,11 @@
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 
-mongoose.connect('mongodb://127.0.0.1:27017/bancoBc')
+mongoose.connect('mongodb://127.0.0.1:27017/testeagendamento')
 .then(()=>{
     console.log("Conectado ao banco de dados");
-})
-
-.catch((error) =>{
+    
+}).catch((error) =>{
     console.error(error)
 })
 
