@@ -7,7 +7,7 @@ const quadraController = {
                 numero: req.body.numero,
                 //foto: req.body.foto
             }
-            const quadraExistente = await quadraModel.findOne({quadra});
+            const quadraExistente = await quadraModel.findOne({numero: quadra.numero});
             if (quadraExistente) {
                 return res.status(201).json({msg: "Número da quadra criado com sucesso!", quadraExistente});
             }

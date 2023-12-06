@@ -10,7 +10,7 @@ const servicoControllers = {
                 //recorrencia: req.body.recorrencia,
                 //descricao: req.body.descricao
             }
-            const servicoExistente = await ServicoModels.findOne({servico});
+            const servicoExistente = await ServicoModels.findOne({modalidade: servico.modalidade});
             if (servicoExistente) {
                 return res.status(201).json({msg: "Servico criado com sucesso!"})
             }
