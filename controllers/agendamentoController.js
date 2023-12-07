@@ -135,29 +135,28 @@ const agendamentoController = {
     getQuadrasAgendadas: async (req, res) => {
         try {
             const {idQuadra} = req.body;
+            //Pegando todos os agendamentos que tem o idQuadra passado.
+            const quadras = await agendamentoModel.find({quadra: idQuadra}).populate("quadra").populate("servico")
 
-            const quadras = await agendamentoModel.find({idQuadra}).select("_id")
-            let infoAgendamento
+            const infoAgendamento = []
+            const dadosAgendamentoPrecisos = []
+            //Pegando os dados específicos de cada documeto agendamento
             for (let a = 0; a < quadras.length; a++) {
-                const infoAgen = await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente")
-
-                infoAgendamento = [{
-                    /*usuario: {
-                        nome: infoAgen.cliente.nome,
-                        email: infoAgen.cliente.email,
-                        telefone: infoAgen.cliente.telefone
-                    },*/
-                    numeroQuadra: infoAgen[a].quadra.numero,
-                    servico: infoAgen[a].servico.modalidade,
-                    data: infoAgen[a].data,
-                    valor: infoAgen[a].valor
-
-                }]
-                console.log(infoAgendamento)
-                
+                infoAgendamento.push(await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente"))
+                const agendamento = {
+                            usuario: {
+                                nome: infoAgendamento[a].cliente.nome,
+                                email: infoAgendamento[a].cliente.email,
+                                telefone: infoAgendamento[a].cliente.telefone
+                            },
+                            quadra: infoAgendamento[a].quadra.numero,
+                            modalidade: infoAgendamento[a].servico.modalidade,
+                            data: infoAgendamento[a].data,
+                            valor: infoAgendamento[a].valor
+                        }
+                dadosAgendamentoPrecisos.push(agendamento)
             }
-            console.log(quadras.length)
-            res.json({infoAgendamento})
+            res.status(200).json({dadosAgendamentoPrecisos})
 
         } catch (error) {
             console.log(error)

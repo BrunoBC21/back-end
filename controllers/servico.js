@@ -27,6 +27,7 @@ const servicoControllers = {
             const servicosId = await ServicoModels.find()
             
             res.json({servicosId});
+            console.log(servicosId.length)
             
         } catch (error) {
             console.log(error)
