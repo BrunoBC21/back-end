@@ -8,12 +8,12 @@ const horarioSchema = new Schema({
     },
 
     inicio: {
-        type: String,
+        type: Number,
         required: true
     },
 
     fim: {
-        type: String,
+        type: Number,
         required: true
     }
 

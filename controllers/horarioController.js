@@ -17,7 +17,23 @@ const horarioController = {
             res.status(201).json({msg: "Horário criado com sucesso"});
 
         } catch (error) {
-            console.log(error);
+            res.json({error});
+        }
+    },
+    calculoHoraEstabelecimento: async (req, res) => {
+        try {
+            const horaAtual = new Date().getHours()
+            const idHora = await horarioModel.findOne();
+            const horaInicial = idHora.inicio;
+            const horaFinal = 2
+            if ((horaAtual >= horaInicial) && (horaAtual <= horaFinal)){
+                res.status(200).json({msg: true})
+            }
+            else {
+                res.status(200).json({msg: false})
+            };
+        } catch (error) {
+            console.log(error)
         }
     }
 }
