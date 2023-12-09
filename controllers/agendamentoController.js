@@ -7,19 +7,44 @@ const {Horario: horarioModel} = require("../models/horario");
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const agendamento = {
-                data: req.body.data,
-                //valor: req.body.valor,
-                //trasacao: req.body.trasacao,
-                horario: req.body.horario,
-                quadra: req.body.quadra,
-                //cliente: req.body.cliente,
-                servico: req.body.servico,
+            const { data, trasacao, horario, quadra, cliente, servico,  horas} = req.body
+
+            //Calculando o preco total dos horários selecionados para o agendamento.
+            const preco = await servicoModel.findOne({servico: servico})
+            const valorTotalQuadras = horas.length * preco.preco
+
+            if(horas.length > 1) {
+                for (let i = 0; i < horas.length; i++) {
+                    const agendamento = {
+                        data: data[0]+"-"+data[1]+"-"+horas[i],
+                        valor: preco.preco,
+                        trasacao: trasacao,
+                        horario: horario,
+                        quadra: quadra,
+                        //cliente: cliente,
+                        servico: servico
+                    }
+                    console.log(agendamento);
+                    const resposta = await agendamentoModel.create(agendamento);
+                }
+                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"})
             }
 
-            const response = await agendamentoModel.create(agendamento);
-            res.status(200).json({response})
-
+            else {
+                const agendamento = {
+                    data: data[0]+"-"+data[1]+"-"+horas,
+                    valor: preco.preco,
+                    trasacao: trasacao,
+                    horario: horario,
+                    quadra: quadra,
+                    //cliente: cliente,
+                    servico: servico
+                }
+                console.log(agendamento);
+                const resposta = await agendamentoModel.create(agendamento);
+                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
+            }
+            
         } catch (error) {
             console.log(error)
         }
@@ -45,9 +70,8 @@ const agendamentoController = {
         } catch (error) {
             console.error(error)
         }
-
-
     },
+
     getServicosQuadras: async (req, res) => {
         try {
             const {servico, data} = req.body;
@@ -58,20 +82,17 @@ const agendamentoController = {
             //Pegando todas as quadras/agendamentos com o id de servico selecionado.
             const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id");
 
+            //Pegando todos os ids dos número
             const quadra = [], idQuadra = []
             for (let i = 0; i < quadraServico.length; i++) {
                 quadra.push(await agendamentoModel.findOne({_id: quadraServico[i]}).populate("quadra").select("_id"))
                 idQuadra.push(quadra[i].quadra.id)
-                console.log(idQuadra)
-                
             }
-
-            console.log(await agendamentoModel.findOne({_id: idQuadra[0], data: data}).select("_id"))
-            //console.log(idQuadra)
+     
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
             const horarioInicial = 16
-            const horarioFinal = parseInt(idHorario.fim);
+            const horarioFinal = 22;
             //Subtraindo a hora do fim do espediente pela de início.
             const horasEstabelecidas = (horarioFinal - horarioInicial)
 
@@ -81,7 +102,7 @@ const agendamentoController = {
 
                 for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
-                        quadrasDisponiveis.push(await agendamentoModel.findOne({_id: idQuadra[e], data: data}).select("_id"))
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: data}).select("_id"))
             
                         if(quadrasDisponiveis[e] == null) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
@@ -90,10 +111,10 @@ const agendamentoController = {
                             array.push(numeroQuadra+" "+hora)
                         }
                 }
+                //console.log(quadrasDisponiveis)
                 return array
             }
             const  promises=[]
-            const array =[]
 
             for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
@@ -110,10 +131,32 @@ const agendamentoController = {
             console.log(error)
         }
     },
-    getQuadras: async (req, res) => {
+    
+    getQuadrasAgendadas: async (req, res) => {
         try {
-            const quadras = await agendamentoModel.find().populate("quadra").populate("servico")
-            res.json({quadras})
+            const {idQuadra} = req.body;
+            //Pegando todos os agendamentos que tem o idQuadra passado.
+            const quadras = await agendamentoModel.find({quadra: idQuadra}).populate("quadra").populate("servico")
+
+            const infoAgendamento = []
+            const dadosAgendamentoPrecisos = []
+            //Pegando os dados específicos de cada documeto agendamento
+            for (let a = 0; a < quadras.length; a++) {
+                infoAgendamento.push(await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente"))
+                const agendamento = {
+                            usuario: {
+                                nome: infoAgendamento[a].cliente.nome,
+                                email: infoAgendamento[a].cliente.email,
+                                telefone: infoAgendamento[a].cliente.telefone
+                            },
+                            quadra: infoAgendamento[a].quadra.numero,
+                            modalidade: infoAgendamento[a].servico.modalidade,
+                            data: infoAgendamento[a].data,
+                            valor: infoAgendamento[a].valor
+                        }
+                dadosAgendamentoPrecisos.push(agendamento)
+            }
+            res.status(200).json({dadosAgendamentoPrecisos})
 
         } catch (error) {
             console.log(error)

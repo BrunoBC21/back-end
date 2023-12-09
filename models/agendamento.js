@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 const agendamentoSchema = new Schema({
     
     data: {
-        type: String,
+        type: [String],
         required: true,
     },
 

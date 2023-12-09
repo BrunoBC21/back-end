@@ -15,7 +15,6 @@ const clienteController = {
                 email: req.body.email,
                 senha: senhaHash,
                 //foto: req.body.foto,
-                //status: req.body.status
             }
             // Validações de email e telefone
             const validarEmail = /\w+@\w+\.\w/;
@@ -168,7 +167,7 @@ const clienteController = {
 
             //Criando o token
             const secret = process.env.SECRET
-            const token = jwt.sign({subject: user.id}, secret, {expiresIn: "1d"})
+            const token = jwt.sign({subject: user.id, role: user.role}, secret, {expiresIn: 30})
 
             res.status(200).json({msg: "Sucesso na autenticação", token});
 

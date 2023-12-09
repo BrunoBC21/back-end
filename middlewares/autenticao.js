@@ -15,9 +15,9 @@ const autenticarUsuario = (req, res, next)=> {
         try {
             jwt.verify(token, secret, (err, decoded) => {
                 if (err) {
-                    console.error('Falha na verificação do token:', err);
+                    res.status(401).json("Token expirou");
                 } else {
-                    //console.log('Token verificado com sucesso:', decoded);
+                    res.status(200);
                     next()
                 }
             });

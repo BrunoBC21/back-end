@@ -1,3 +1,4 @@
+const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
@@ -11,7 +12,7 @@ const quadraSchema = new Schema({
         type: String,
         required: false
     }
-});
+}, {timestamps: true});
 
 const Quadra = mongoose.model("Quadra", quadraSchema);
 

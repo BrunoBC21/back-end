@@ -34,7 +34,9 @@ const clienteSchema = new Schema ({
 
     role: {
         type: String,
-        required: true
+        required: true,
+        enum: ["admin", "user"],
+        default: "user"
     }
 
 }, {timestamps: true});
