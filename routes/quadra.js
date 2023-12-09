@@ -2,13 +2,12 @@ const express = require("express")
 const router = express.Router()
 
 const quadraController = require("../controllers/quadraControllers")
+const autenticao = require("../middlewares/autenticao");
+const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
 
 router
     .route("/quadra")
-    .post((req, res) => quadraController.create(req, res));
-
-router
-    .route("/quadra")
+    .post(autenticaoPermissao, (req, res) => quadraController.create(req, res))
     .get((req, res) => quadraController.getAll(req, res));
 
 router

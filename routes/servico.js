@@ -2,11 +2,11 @@ const express =  require("express");
 const router = express.Router();
 
 const clienteController = require("../controllers/servico");
-const autenticao = require("../middlewares/autenticao");
+const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
 
 router 
     .route("/servico")
-    .post((req, res) => clienteController.create(req, res))
-    .get(autenticao, (req, res) => clienteController.getAll(req, res));
+    .post(autenticaoPermissao, (req, res) => clienteController.create(req, res))
+    .get((req, res) => clienteController.getAll(req, res));
 
 module.exports = router

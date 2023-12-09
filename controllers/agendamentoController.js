@@ -91,10 +91,14 @@ const agendamentoController = {
      
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
-            const horarioInicial = 16
-            const horarioFinal = 22;
-            //Subtraindo a hora do fim do espediente pela de início.
-            const horasEstabelecidas = (horarioFinal - horarioInicial)
+            let horarioInicio = parseInt(idHorario.inicio)
+            let horarioFinal  = parseInt(idHorario.fim)
+
+            if(horarioFinal < horarioInicio) {
+                horarioFinal += 24
+            }
+            const horasEstabelecidas = parseInt(horarioFinal - horarioInicio)
+          
 
             async function buscarHorariosDisponiveis (data, hora){
                 const quadrasDisponiveis = []
@@ -107,8 +111,11 @@ const agendamentoController = {
                         if(quadrasDisponiveis[e] == null) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
                             const numeroQuadra = quadra.quadra.numero
-        
-                            array.push(numeroQuadra+" "+hora)
+                            numeroQuadra+" "+hora
+                            array.push({
+                                quadra: numeroQuadra,
+                                hora: hora
+                            })
                         }
                 }
                 //console.log(quadrasDisponiveis)
@@ -118,12 +125,16 @@ const agendamentoController = {
 
             for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
-                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioInicial +i);
-                promises.push(buscarHorariosDisponiveis(dataHorario, horarioInicial + i))
+                if(horarioInicio + i > 23){
+                    horarioInicio = -8
+                }
+                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioInicio +i);
+                promises.push(buscarHorariosDisponiveis(dataHorario, horarioInicio + i))
             }
 
             const p = await Promise.all(promises)
             const horarioDisponiveisQuadras = p.flat()
+            console.log(horasEstabelecidas)
 
             res.json({horarioDisponiveisQuadras})
             
