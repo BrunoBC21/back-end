@@ -3,6 +3,8 @@ const nodemailer = require("nodemailer");
 const provedor = {
     enviarEmail: async (req, res)=> {
         try {
+            const {email, estrutura} = req.body
+
             const user = "21beachtime21@gmail.com"
             const pass = "gWJ7kmsEIyYAMcnV"
 
@@ -23,10 +25,10 @@ const provedor = {
 
             transporte.sendMail({
                 from: user,
-                to: "herissonroger3@gmail.com",
+                to: email,
                 replyTo: user,
                 subject: "Olá, Herisson viado!",
-                html:  emailContent
+                html:  estrutura
                 //text: "Vc e o Breno são gays"
 
             }).then((info)=>{
