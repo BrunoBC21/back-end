@@ -28,9 +28,11 @@ const horarioController = {
             const horaFinal = 2
             if ((horaAtual >= horaInicial) && (horaAtual <= horaFinal)){
                 res.status(200).json({msg: true})
+                console.log(true)
             }
             else {
                 res.status(200).json({msg: false})
+                console.log(false)
             };
         } catch (error) {
             console.log(error)

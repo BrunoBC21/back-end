@@ -21,7 +21,7 @@ const agendamentoController = {
                         trasacao: trasacao,
                         horario: horario,
                         quadra: quadra,
-                        //cliente: cliente,
+                        cliente: cliente,
                         servico: servico
                     }
                     console.log(agendamento);
