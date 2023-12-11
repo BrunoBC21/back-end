@@ -46,7 +46,7 @@ const agendamentoController = {
             }
             
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     },
 
@@ -68,7 +68,7 @@ const agendamentoController = {
 
 
         } catch (error) {
-            console.error(error)
+            res.json(error)
         }
     },
 
@@ -134,12 +134,11 @@ const agendamentoController = {
 
             const p = await Promise.all(promises)
             const horarioDisponiveisQuadras = p.flat()
-            console.log(horasEstabelecidas)
 
             res.json({horarioDisponiveisQuadras})
             
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     },
     
@@ -170,7 +169,7 @@ const agendamentoController = {
             res.status(200).json({dadosAgendamentoPrecisos})
 
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     }
 }

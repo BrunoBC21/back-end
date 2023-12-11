@@ -131,7 +131,7 @@ const clienteController = {
             res.status(200).json({cliente, msg: "Atulizado com sucesso"})
 
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     },
 
@@ -172,8 +172,7 @@ const clienteController = {
             res.status(200).json({msg: "Sucesso na autenticação", token});
 
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: "Error during login"});
+            res.status(500).json({ error: "Error login"});
         }
     }
 }

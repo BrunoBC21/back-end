@@ -9,4 +9,8 @@ router
     .post(autenticaoPermissao, (req, res)=> horarioController.create(req, res))
     .get((req, res)=> horarioController.calculoHoraEstabelecimento(req, res));
 
+router
+    .route("/horario-cadastrado")
+    .get((req, res)=> horarioController.get(req, res));
+
 module.exports = router

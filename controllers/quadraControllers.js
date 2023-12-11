@@ -15,7 +15,7 @@ const quadraController = {
             res.status(201).json({msg: "Número da quadra criado com sucesso"});
 
         } catch (error) {
-            console.log(error);
+            res.json(error);
         }
     },
 
@@ -25,7 +25,7 @@ const quadraController = {
             res.json({quadraGet});
 
         } catch (error) {
-            console.error(error)
+            res.json(error)
         }
     },
 
@@ -44,7 +44,7 @@ const quadraController = {
             
 
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
        
     },
@@ -59,7 +59,7 @@ const quadraController = {
             res.status(200).json({response, msg: "Serviço atualizado com sucesso!"});
 
         } catch (error) {
-            console.log(error);
+            res.json(error);
         }
     }
 }

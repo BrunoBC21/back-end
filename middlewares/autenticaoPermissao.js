@@ -27,7 +27,7 @@ const autenticaoPermissao = (req, res, next)=> {
             });
     
         } catch (error) {
-            console.log({msg: error});
+            res.json({msg: error});
         }
 
     
