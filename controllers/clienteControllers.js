@@ -167,7 +167,7 @@ const clienteController = {
 
             //Criando o token
             const secret = process.env.SECRET
-            const token = jwt.sign({subject: user.id, role: user.role}, secret, {expiresIn: 30})
+            const token = jwt.sign({subject: user.id, role: user.role}, secret, {expiresIn: "1d"})
 
             res.status(200).json({msg: "Sucesso na autenticação", token});
 

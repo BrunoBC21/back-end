@@ -8,27 +8,28 @@ const provedor = {
             const user = "21beachtime21@gmail.com"
             const pass = "gWJ7kmsEIyYAMcnV"
 
+            const codigoConfirmacao = Math.round(Math.random() * 900000) + 100000
+            res.json({codigoConfirmacao});
+
             const transporte = nodemailer.createTransport({
                 host: "smtp-relay.brevo.com",
                 port: 587,
                 auth: {user, pass},
             })
             const emailContent = `
-  <p>Olá ${user.email}!</p>
-  <p>Clique no botão abaixo para confirmar seu cadastro:</p>
-  <a href="http://seusite.com/confirmar/${user.confirmationCode}">
-    <button style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;">
-      Confirmar Cadastro
-    </button>
-  </a>
-`;
+                <h2>Olá ${email}!</h2>
+                <h3>Por favor, copie o código abaixo cole na aplicação e confirme:</h3>
+                    <div style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; margin-right: 96.3%">
+                        ${codigoConfirmacao}
+                    </div>
+                `;
 
             transporte.sendMail({
                 from: user,
                 to: email,
                 replyTo: user,
-                subject: "Olá, Herisson viado!",
-                html:  estrutura
+                subject: "Confirmação de e-mail!",
+                html:  emailContent
                 //text: "Vc e o Breno são gays"
 
             }).then((info)=>{
@@ -37,7 +38,6 @@ const provedor = {
             }).catch((error)=>{
                 res.json({error})
             })
-
         } catch (error) {
             res.json({error});
         }
