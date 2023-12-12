@@ -3,14 +3,12 @@ const nodemailer = require("nodemailer");
 const provedor = {
     enviarEmail: async (req, res)=> {
         try {
-            const {email, estrutura} = req.body
+            const {email} = req.body
 
             const user = "21beachtime21@gmail.com"
             const pass = "gWJ7kmsEIyYAMcnV"
 
             const codigoConfirmacao = Math.round(Math.random() * 900000) + 100000
-            res.json({codigoConfirmacao});
-
             const transporte = nodemailer.createTransport({
                 host: "smtp-relay.brevo.com",
                 port: 587,
@@ -33,10 +31,10 @@ const provedor = {
                 //text: "Vc e o Breno são gays"
 
             }).then((info)=>{
-                res.json({msg:info })
+                res.json({codigoConfirmacao})
 
             }).catch((error)=>{
-                res.json({error})
+                console.log({error})
             })
         } catch (error) {
             res.json({error});

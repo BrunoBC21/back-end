@@ -8,6 +8,9 @@ const agendamento = require("./agendamento");
 const quadraServico = require("./quadraServico");
 const cliente = require("./cliente");
 const confirmacaoEmail = require("./enviarEmail");
+const cancelar = require("./cancelamento");
+
+router.use('/', cancelar);
 
 router.use('/', confirmacaoEmail)
 

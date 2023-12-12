@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const agendamentoSchema = new Schema({
-    
     data: {
         type: [String],
         required: true,

@@ -91,6 +91,8 @@ const agendamentoController = {
      
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
+            //horarioCalculo para fazer a validição de acima de 23h. 
+            let horarioCalculo = parseInt(idHorario.inicio)
             let horarioInicio = parseInt(idHorario.inicio)
             let horarioFinal  = parseInt(idHorario.fim)
 
@@ -100,15 +102,20 @@ const agendamentoController = {
             const horasEstabelecidas = parseInt(horarioFinal - horarioInicio)
           
 
-            async function buscarHorariosDisponiveis (data, hora){
+            async function buscarHorariosDisponiveis (date, hora, horaValidacao){
                 const quadrasDisponiveis = []
                 const array = []
 
                 for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
-                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: data}).select("_id"))
-            
-                        if(quadrasDisponiveis[e] == null) {
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: date}).select("_id"))
+              
+                        const horaAtual = new Date().getHours()
+                        const dataAtual = new Date().toLocaleDateString()
+                        const dataFront = new Date(data[1]).toLocaleDateString()
+                        console.log(dataFront > dataAtual)
+
+                        if((quadrasDisponiveis[e] == null && horaValidacao > horaAtual) || dataAtual < dataFront) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
                             const numeroQuadra = quadra.quadra.numero
                             numeroQuadra+" "+hora
@@ -128,8 +135,8 @@ const agendamentoController = {
                 if(horarioInicio + i > 23){
                     horarioInicio = -8
                 }
-                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioInicio +i);
-                promises.push(buscarHorariosDisponiveis(dataHorario, horarioInicio + i))
+                const dataHorario = data[0]+'/'+data[1]+"/"+(horarioInicio +i);
+                promises.push(buscarHorariosDisponiveis(dataHorario, (horarioInicio + i), horarioCalculo + i))
             }
 
             const p = await Promise.all(promises)
