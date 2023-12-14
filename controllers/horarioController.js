@@ -25,7 +25,10 @@ const horarioController = {
             const horaAtual = new Date().getHours()
             const idHora = await horarioModel.findOne();
             const horaInicial = idHora.inicio;
-            const horaFinal = idHora.fim
+            let horaFinal = idHora.fim
+            if (horaFinal < horaInicial) {
+                horaFinal += 24
+            }
             if ((horaAtual >= horaInicial) && (horaAtual <= horaFinal)){
                 res.status(200).json({msg: true})
             }

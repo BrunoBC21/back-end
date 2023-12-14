@@ -12,10 +12,10 @@ router
 
 router
     .route("/quadras-disponiveis")
-    .post(autenticao, (req, res)=> agendamentoController.getServicosQuadras(req, res));
+    .post((req, res)=> agendamentoController.getServicosQuadras(req, res));
 
 router
     .route("/servico-quadra")
-    .post(autenticaoPermissao, (req, res)=> agendamentoController.associarQuadraServico(req, res));
+    .post((req, res)=> agendamentoController.associarQuadraServico(req, res));
 
 module.exports = router

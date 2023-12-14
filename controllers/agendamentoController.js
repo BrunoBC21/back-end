@@ -113,7 +113,6 @@ const agendamentoController = {
                         const horaAtual = new Date().getHours()
                         const dataAtual = new Date().toLocaleDateString()
                         const dataFront = new Date(data[1]).toLocaleDateString()
-                        console.log(dataFront > dataAtual)
 
                         if((quadrasDisponiveis[e] == null && horaValidacao > horaAtual) || dataAtual < dataFront) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
@@ -143,6 +142,7 @@ const agendamentoController = {
             const horarioDisponiveisQuadras = p.flat()
 
             res.json({horarioDisponiveisQuadras})
+            console.log(horarioDisponiveisQuadras)
             
         } catch (error) {
             res.json(error)
@@ -161,11 +161,11 @@ const agendamentoController = {
             for (let a = 0; a < quadras.length; a++) {
                 infoAgendamento.push(await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente"))
                 const agendamento = {
-                            usuario: {
+                            /*usuario: {
                                 nome: infoAgendamento[a].cliente.nome,
                                 email: infoAgendamento[a].cliente.email,
                                 telefone: infoAgendamento[a].cliente.telefone
-                            },
+                            },*/
                             quadra: infoAgendamento[a].quadra.numero,
                             modalidade: infoAgendamento[a].servico.modalidade,
                             data: infoAgendamento[a].data,
