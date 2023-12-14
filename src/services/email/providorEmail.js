@@ -5,14 +5,14 @@ const provedor = {
         try {
             const {email, nome} = req.body
             const user = "21beachtime21@gmail.com"
-            const pass = "gWJ7kmsEIyYAMcnV"
+            const pass = "oyjxrkqsmrsgmvnz"
             
             const codigoConfirmacao = Math.round(Math.random() * 900000) + 100000
             
             const transporte = nodemailer.createTransport({
-                host: "smtp-relay.brevo.com",
-                port: 587,
-                secure: false,
+                host: "smtp.gmail.com",
+                port: 465,
+                secure: true,
                 auth: {user, pass},
             })
             const emailContent = `

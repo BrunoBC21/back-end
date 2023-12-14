@@ -29,7 +29,7 @@ const horarioController = {
             if (horaFinal < horaInicial) {
                 horaFinal += 24
             }
-            if ((horaAtual >= horaInicial) && (horaAtual <= horaFinal)){
+            if ((horaAtual >= horaInicial) && (horaAtual < horaFinal)){
                 res.status(200).json({msg: true})
             }
             else {
