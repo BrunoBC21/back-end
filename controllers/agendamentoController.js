@@ -8,7 +8,8 @@ const jwt = require("jsonwebtoken");
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const { data, trasacao, quadra, cliente, servico,  horas} = req.body
+            const { data, trasacao, quadra, servico,  horas} = req.body
+            const cliente = req.usuario
             //Calculando o preco total dos horários selecionados para o agendamento.
             const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
