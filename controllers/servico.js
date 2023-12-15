@@ -18,7 +18,7 @@ const servicoControllers = {
             res.status(201).json({msg: "Servico criado com sucesso"});
 
         } catch (error) {
-            console.log(error);
+            res.json(error);
         }
     },
 
@@ -27,10 +27,9 @@ const servicoControllers = {
             const servicosId = await ServicoModels.find()
             
             res.json({servicosId});
-            console.log(servicosId.length)
             
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     }
 }

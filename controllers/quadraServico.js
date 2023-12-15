@@ -1,3 +1,4 @@
+const { response } = require("express");
 const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
 
 const quadraServicoController = {
@@ -11,7 +12,7 @@ const quadraServicoController = {
             res.status(201).json({response, msg: "Serviço criado com sucesso!"});
 
         } catch (error) {
-            console.log(error);
+            res.json(error);
         }
     },
 
@@ -21,7 +22,7 @@ const quadraServicoController = {
             res.json({quadras})
 
         } catch (error) {
-            console.error(error)
+            res.json(error)
         }
     },
 
@@ -40,7 +41,7 @@ const quadraServicoController = {
             
 
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
        
     },
@@ -55,7 +56,7 @@ const quadraServicoController = {
             res.status(200).json({response, msg: "Serviço atualizado com sucesso!"});
 
         } catch (error) {
-            console.log(error);
+            res.json(error);
         }
     }
 }

@@ -3,13 +3,18 @@ const {Servico: servicoModel} = require("../models/servico");
 const {Quadra: quadraModel} = require("../models/quadra");
 const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
 const {Horario: horarioModel} = require("../models/horario");
+const jwt = require("jsonwebtoken");
 
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const { data, trasacao, horario, quadra, cliente, servico,  horas} = req.body
-
+            const { data, transacao, quadra, servico,  horas} = req.body
+            const cliente = req.usuario
             //Calculando o preco total dos horários selecionados para o agendamento.
+            const idHorario = await horarioModel.findOne().select("_id")
+            const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
+            const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
+
             const preco = await servicoModel.findOne({servico: servico})
             const valorTotalQuadras = horas.length * preco.preco
 
@@ -18,35 +23,35 @@ const agendamentoController = {
                     const agendamento = {
                         data: data[0]+"-"+data[1]+"-"+horas[i],
                         valor: preco.preco,
-                        trasacao: trasacao,
-                        horario: horario,
-                        quadra: quadra,
-                        //cliente: cliente,
-                        servico: servico
+                        transacao: transacao,
+                        horario: idHorario,
+                        quadra: idQuadra,
+                        cliente: cliente,
+                        servico: idServico
                     }
                     console.log(agendamento);
                     const resposta = await agendamentoModel.create(agendamento);
                 }
-                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"})
+                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"})
             }
 
             else {
                 const agendamento = {
                     data: data[0]+"-"+data[1]+"-"+horas,
                     valor: preco.preco,
-                    trasacao: trasacao,
-                    horario: horario,
-                    quadra: quadra,
-                    //cliente: cliente,
-                    servico: servico
+                    transacao: transacao,
+                    horario: idHorario,
+                    quadra: idQuadra,
+                    cliente: cliente,
+                    servico: idServico
                 }
                 console.log(agendamento);
                 const resposta = await agendamentoModel.create(agendamento);
-                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
+                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"});
             }
             
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     },
 
@@ -68,7 +73,7 @@ const agendamentoController = {
 
 
         } catch (error) {
-            console.error(error)
+            res.json(error)
         }
     },
 
@@ -91,24 +96,37 @@ const agendamentoController = {
      
             //Buscando o id dos horários cadastrados pelo admin.
             const idHorario = await horarioModel.findOne()
-            const horarioInicial = 16
-            const horarioFinal = 22;
-            //Subtraindo a hora do fim do espediente pela de início.
-            const horasEstabelecidas = (horarioFinal - horarioInicial)
+            //horarioCalculo para fazer a validição de acima de 23h. 
+            let horarioCalculo = parseInt(idHorario.inicio)
+            let horarioInicio = parseInt(idHorario.inicio)
+            let horarioFinal  = parseInt(idHorario.fim)
 
-            async function buscarHorariosDisponiveis (data, hora){
+            if(horarioFinal < horarioInicio) {
+                horarioFinal += 24
+            }
+            const horasEstabelecidas = parseInt(horarioFinal - horarioInicio)
+          
+
+            async function buscarHorariosDisponiveis (date, hora, horaValidacao){
                 const quadrasDisponiveis = []
                 const array = []
 
                 for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
-                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: data}).select("_id"))
-            
-                        if(quadrasDisponiveis[e] == null) {
+                        quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: date}).select("_id"))
+              
+                        const horaAtual = new Date().getHours()
+                        const dataAtual = new Date().toLocaleDateString()
+                        const dataFront = new Date(data[1]).toLocaleDateString()
+
+                        if((quadrasDisponiveis[e] == null && horaValidacao > horaAtual) || dataAtual < dataFront) {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
                             const numeroQuadra = quadra.quadra.numero
-        
-                            array.push(numeroQuadra+" "+hora)
+                            numeroQuadra+" "+hora
+                            array.push({
+                                quadra: numeroQuadra,
+                                hora: hora
+                            })
                         }
                 }
                 //console.log(quadrasDisponiveis)
@@ -118,17 +136,21 @@ const agendamentoController = {
 
             for (let i = 0; i < horasEstabelecidas; i++) {
                 // Tratando o formato de data que está vindo do front-end.
-                const dataHorario = data[0]+'-'+data[1]+"-"+(horarioInicial +i);
-                promises.push(buscarHorariosDisponiveis(dataHorario, horarioInicial + i))
+                if(horarioInicio + i > 23){
+                    horarioInicio = -8
+                }
+                const dataHorario = data[0]+'/'+data[1]+"/"+(horarioInicio +i);
+                promises.push(buscarHorariosDisponiveis(dataHorario, (horarioInicio + i), horarioCalculo + i))
             }
 
             const p = await Promise.all(promises)
             const horarioDisponiveisQuadras = p.flat()
 
             res.json({horarioDisponiveisQuadras})
+            console.log(horarioDisponiveisQuadras)
             
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     },
     
@@ -144,11 +166,11 @@ const agendamentoController = {
             for (let a = 0; a < quadras.length; a++) {
                 infoAgendamento.push(await agendamentoModel.findOne({_id: quadras[a]}).populate("quadra").populate("servico").populate("cliente"))
                 const agendamento = {
-                            usuario: {
+                            /*usuario: {
                                 nome: infoAgendamento[a].cliente.nome,
                                 email: infoAgendamento[a].cliente.email,
                                 telefone: infoAgendamento[a].cliente.telefone
-                            },
+                            },*/
                             quadra: infoAgendamento[a].quadra.numero,
                             modalidade: infoAgendamento[a].servico.modalidade,
                             data: infoAgendamento[a].data,
@@ -159,7 +181,7 @@ const agendamentoController = {
             res.status(200).json({dadosAgendamentoPrecisos})
 
         } catch (error) {
-            console.log(error)
+            res.json(error)
         }
     }
 }

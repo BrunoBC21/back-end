@@ -18,12 +18,13 @@ const autenticarUsuario = (req, res, next)=> {
                     res.status(401).json("Token expirou");
                 } else {
                     res.status(200);
+                    req.usuario = {_id: decoded.subject}
                     next()
                 }
             });
     
         } catch (error) {
-            console.log({msg: error});
+            res.json({msg: error});
         }
 
     

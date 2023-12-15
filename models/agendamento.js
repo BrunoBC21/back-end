@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const agendamentoSchema = new Schema({
-    
     data: {
         type: [String],
         required: true,
@@ -13,7 +12,7 @@ const agendamentoSchema = new Schema({
         required: false,
     },
 
-    trasacao: {
+    transacao: {
         type: String,
         required: false,
     },

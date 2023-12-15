@@ -13,9 +13,13 @@ const autenticaoPermissao = (req, res, next)=> {
         const [, token] = cabecalhoAutenticacao.split(" ");
         const secret = process.env.SECRET;
         try {
+        
             jwt.verify(token, secret, (err, infor) => {
+    
                 if (err) {
+                    
                     res.status(401).json("Token expirou");
+                   
                 } 
                 else if (infor.role == "user"){
                        res.status(200);
@@ -25,9 +29,10 @@ const autenticaoPermissao = (req, res, next)=> {
                     res.status(403).json("Permissão inválida!");
                 }
             });
+            console.log({msg: token.role})
     
         } catch (error) {
-            console.log({msg: error});
+            res.json({msg: error});
         }
 
     

@@ -7,7 +7,7 @@ const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
 
 router
     .route("/agendamento")
-    .post((req, res)=> agendamentoController.create(req, res))
+    .post(autenticao, (req, res)=> agendamentoController.create(req, res))
     .get(autenticaoPermissao, (req, res)=> agendamentoController.getQuadrasAgendadas(req, res));
 
 router
@@ -16,6 +16,6 @@ router
 
 router
     .route("/servico-quadra")
-    .post(autenticaoPermissao, (req, res)=> agendamentoController.associarQuadraServico(req, res));
+    .post((req, res)=> agendamentoController.associarQuadraServico(req, res));
 
 module.exports = router

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 
-mongoose.connect('mongodb+srv://herissonroger3:CkEWaXZyawBf8Qqt@cluster0.kodrryn.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://brenoramon55:26s2M6yQ3b9NpPUW@cluster0.xsr0gwd.mongodb.net/?retryWrites=true&w=majority')
 .then(()=>{
     console.log("Conectado ao banco de dados");
     

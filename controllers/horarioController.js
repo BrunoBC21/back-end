@@ -25,15 +25,50 @@ const horarioController = {
             const horaAtual = new Date().getHours()
             const idHora = await horarioModel.findOne();
             const horaInicial = idHora.inicio;
-            const horaFinal = 2
-            if ((horaAtual >= horaInicial) && (horaAtual <= horaFinal)){
+            let horaFinal = idHora.fim
+            if (horaFinal < horaInicial) {
+                horaFinal += 24
+            }
+            if ((horaAtual >= horaInicial) && (horaAtual < horaFinal)){
                 res.status(200).json({msg: true})
             }
             else {
                 res.status(200).json({msg: false})
             };
         } catch (error) {
-            console.log(error)
+            res.json(error)
+        }
+    },
+
+    get: async (req, res) => {
+        try {
+            const horarios = await horarioModel.findOne()
+            let horarioInicio = parseInt(horarios.inicio)
+            let horarioFinal  = parseInt(horarios.fim)
+
+            if(horarioFinal < horarioInicio) {
+                horarioFinal += 24
+            }
+            const horasEstabelecidas = parseInt(horarioFinal - horarioInicio)
+            const array = []
+
+            for (let i = 0; i < horasEstabelecidas; i++) {
+                // Tratando o formato de data que está vindo do front-end.
+                if(horarioInicio + i > 23){
+                    horarioInicio = -8
+                }
+                const dataHorario = (horarioInicio +i);
+                array.push(dataHorario)
+            }
+
+            const dias = {
+                dia: horarios.dias,
+                horas: array
+            }
+            res.json({dias})
+
+        } catch (error) {
+            res.json({error})
         }
     }
 }
