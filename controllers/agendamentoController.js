@@ -13,7 +13,7 @@ const agendamentoController = {
             const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
 
-            /*const preco = await servicoModel.findOne({servico: servico})
+            const preco = await servicoModel.findOne({servico: servico})
             const valorTotalQuadras = horas.length * preco.preco
 
             if(horas.length > 1) {
@@ -38,15 +38,15 @@ const agendamentoController = {
                     data: data[0]+"-"+data[1]+"-"+horas,
                     valor: preco.preco,
                     trasacao: trasacao,
-                    horario: horario,
-                    quadra: quadra,
-                    //cliente: cliente,
+                    horario: idHorario,
+                    quadra: idQuadra,
+                    cliente: cliente,
                     servico: servico
                 }
                 console.log(agendamento);
                 const resposta = await agendamentoModel.create(agendamento);
                 res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
-            }*/
+            }
             
         } catch (error) {
             res.json(error)
