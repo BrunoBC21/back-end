@@ -12,6 +12,7 @@ const agendamentoController = {
             //Calculando o preco total dos horários selecionados para o agendamento.
             const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
+            const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
             const preco = await servicoModel.findOne({servico: servico})
             const valorTotalQuadras = horas.length * preco.preco
@@ -25,12 +26,12 @@ const agendamentoController = {
                         horario: idHorario,
                         quadra: idQuadra,
                         cliente: cliente,
-                        servico: servico
+                        servico: idServico
                     }
                     console.log(agendamento);
                     const resposta = await agendamentoModel.create(agendamento);
                 }
-                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"})
+                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"})
             }
 
             else {
@@ -41,11 +42,11 @@ const agendamentoController = {
                     horario: idHorario,
                     quadra: idQuadra,
                     cliente: cliente,
-                    servico: servico
+                    servico: idServico
                 }
                 console.log(agendamento);
                 const resposta = await agendamentoModel.create(agendamento);
-                res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
+                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"});
             }
             
         } catch (error) {
