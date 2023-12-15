@@ -3,12 +3,12 @@ const {Servico: servicoModel} = require("../models/servico");
 const {Quadra: quadraModel} = require("../models/quadra");
 const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
 const {Horario: horarioModel} = require("../models/horario");
+const jwt = require("jsonwebtoken");
 
 const agendamentoController = {
     create: async (req, res) => {
         try {
             const { data, trasacao, quadra, cliente, servico,  horas} = req.body
-
             //Calculando o preco total dos horários selecionados para o agendamento.
             const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
