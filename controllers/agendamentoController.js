@@ -7,10 +7,13 @@ const {Horario: horarioModel} = require("../models/horario");
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const { data, trasacao, horario, quadra, cliente, servico,  horas} = req.body
+            const { data, trasacao, quadra, cliente, servico,  horas} = req.body
 
             //Calculando o preco total dos horários selecionados para o agendamento.
-            const preco = await servicoModel.findOne({servico: servico})
+            const idHorario = await horarioModel.findOne().select("_id")
+            const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
+
+            /*const preco = await servicoModel.findOne({servico: servico})
             const valorTotalQuadras = horas.length * preco.preco
 
             if(horas.length > 1) {
@@ -19,8 +22,8 @@ const agendamentoController = {
                         data: data[0]+"-"+data[1]+"-"+horas[i],
                         valor: preco.preco,
                         trasacao: trasacao,
-                        horario: horario,
-                        quadra: quadra,
+                        horario: idHorario,
+                        quadra: idQuadra,
                         cliente: cliente,
                         servico: servico
                     }
@@ -43,7 +46,7 @@ const agendamentoController = {
                 console.log(agendamento);
                 const resposta = await agendamentoModel.create(agendamento);
                 res.status(200).json({msg: "Parabéns, agendamento realizado com sucesso!"});
-            }
+            }*/
             
         } catch (error) {
             res.json(error)
