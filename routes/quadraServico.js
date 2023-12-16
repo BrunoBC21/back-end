@@ -9,6 +9,6 @@ router
 
 router
     .route("/buscarQuadras")
-    .post((req, res)=> quadraServicoController.getAll(req, res));
+    .get((req, res)=> quadraServicoController.getAll(req, res));
 
 module.exports = router

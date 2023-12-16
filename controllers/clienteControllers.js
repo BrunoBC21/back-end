@@ -1,6 +1,7 @@
 const {Cliente: ClienteModel, Cliente} = require("../models/cliente");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const { model } = require("mongoose");
 
 const clienteController = {
     create: async(req, res)=> {
@@ -174,6 +175,18 @@ const clienteController = {
         } catch (error) {
             res.status(500).json({ error: "Error login"});
         }
+    },
+    privilegioUsuario: async (req, res)=> {
+        try {
+            const email = req.body.email
+            const id = await ClienteModel.findOne({email: email}).select("_id")
+            const upUser = await ClienteModel.updateOne({_id: id}, {role: "admin"});
+            res.status(201).json({upUser});
+
+        } catch (error) {
+            
+        }
     }
+
 }
 module.exports = clienteController

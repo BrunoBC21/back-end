@@ -3,7 +3,6 @@ const {Servico: servicoModel} = require("../models/servico");
 const {Quadra: quadraModel} = require("../models/quadra");
 const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
 const {Horario: horarioModel} = require("../models/horario");
-const jwt = require("jsonwebtoken");
 
 const agendamentoController = {
     create: async (req, res) => {
@@ -15,7 +14,7 @@ const agendamentoController = {
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
             const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
-            const preco = await servicoModel.findOne({servico: servico})
+            const preco = await servicoModel.findOne({servico: idServico})
             const valorTotalQuadras = horas.length * preco.preco
 
             if(horas.length > 1) {
@@ -65,7 +64,11 @@ const agendamentoController = {
             const idHorario = await horarioModel.findOne().select("_id");
         
             //Criando a associação entre quadra e servico
-            const quadraServico = {data: 0, horario: idHorario, quadra: idQuadra, servico: idServico}
+            const quadraServico = {data: 0, horario: idHorario, quadra: idQuadra, servico: idServico, status: 'C'}
+            const verificar = await agendamentoModel.findOne({quadraServico})
+            if(verificar) {
+                return res.status(200).json({msg: "Não é possível associar o número de quadra com servico, pois já estão vinculados!"})
+            }
             
             const response = await agendamentoModel.create(quadraServico);
             res.status(201).json({response, msg: "Associação criada com sucesso!"})
@@ -85,7 +88,7 @@ const agendamentoController = {
             const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
             //Pegando todas as quadras/agendamentos com o id de servico selecionado.
-            const quadraServico = await agendamentoModel.find({servico: idServico}).select("_id");
+            const quadraServico = await agendamentoModel.find({servico: idServico, status:'C'}).select("_id");
 
             //Pegando todos os ids dos número
             const quadra = [], idQuadra = []
@@ -114,19 +117,15 @@ const agendamentoController = {
                 for (let e = 0; e < idQuadra.length; e++) {
                         //Verificando se os ids das quadrasServicos estão agendados para as horas selecionadas. 
                         quadrasDisponiveis.push(await agendamentoModel.findOne({quadra: idQuadra[e], data: date}).select("_id"))
-              
                         const horaAtual = new Date().getHours()
                         const dataAtual = new Date().toLocaleDateString()
                         const dataFront = new Date(data[1]).toLocaleDateString()
 
-                        if((quadrasDisponiveis[e] == null && horaValidacao > horaAtual) || dataAtual < dataFront) {
+                        if((quadrasDisponiveis[e] == null && horaValidacao > horaAtual) || dataAtual < dataFront)  {
                             const quadra = await agendamentoModel.findOne({_id: quadraServico[e]}).populate("quadra")
                             const numeroQuadra = quadra.quadra.numero
-                            numeroQuadra+" "+hora
-                            array.push({
-                                quadra: numeroQuadra,
-                                hora: hora
-                            })
+                            
+                            array.push(numeroQuadra+" "+hora)
                         }
                 }
                 //console.log(quadrasDisponiveis)
@@ -147,7 +146,7 @@ const agendamentoController = {
             const horarioDisponiveisQuadras = p.flat()
 
             res.json({horarioDisponiveisQuadras})
-            console.log(horarioDisponiveisQuadras)
+            //console.log(horarioDisponiveisQuadras)
             
         } catch (error) {
             res.json(error)

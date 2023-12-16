@@ -29,4 +29,8 @@ router
     .route("/login")
     .post((req, res)=> clienteController.login(req, res))
 
+router
+    .route("/privilegio-cliente")
+    .post((req, res)=> clienteController.privilegioUsuario(req, res));
+
 module.exports = router

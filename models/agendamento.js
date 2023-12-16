@@ -43,7 +43,7 @@ const agendamentoSchema = new Schema({
     status: {
         type: String,
         required: true,
-        enum: ['D', 'A'],
+        enum: ['D', 'A', 'C'],
         default: 'D'
     }
 

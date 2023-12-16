@@ -23,6 +23,7 @@ const autenticaoPermissao = (req, res, next)=> {
                 } 
                 else if (infor.role == "user"){
                        res.status(200);
+                       req.usuario = {usuario: infor.subject}
                        next()
                 }
                 else {
