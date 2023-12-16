@@ -56,7 +56,7 @@ const agendamentoController = {
 
     associarQuadraServico: async (req, res) => {
         try {
-            const {quadra, servico} = req.body
+            const {quadra, servico}=req.body
 
             //Pegando os ids do número da quadra e do servico.
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id");
