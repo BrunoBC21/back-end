@@ -65,7 +65,7 @@ const agendamentoController = {
         
             //Criando a associação entre quadra e servico
             const quadraServico = {data: 0, horario: idHorario, quadra: idQuadra, servico: idServico, status: 'C'}
-            const verificar = await agendamentoModel.findOne({quadraServico})
+            const verificar = await agendamentoModel.findOne({quadra: idQuadra})
             if(verificar) {
                 return res.status(200).json({msg: "Não é possível associar o número de quadra com servico, pois já estão vinculados!"})
             }
