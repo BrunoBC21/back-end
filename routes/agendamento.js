@@ -20,6 +20,6 @@ router
 
 router
     .route("/meus-agendamentos")
-    .post((req, res)=> agendamentoController.clienteAgendamentos(req, res));
+    .post(autenticao, (req, res)=> agendamentoController.clienteAgendamentos(req, res));
 
 module.exports = router

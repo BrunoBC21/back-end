@@ -9,6 +9,7 @@ const agendamentoController = {
         try {
             const { data, transacao, quadra, servico,  horas} = req.body
             const cliente = req.usuario
+            console.log(cliente)
             //Calculando o preco total dos horários selecionados para o agendamento.
             const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
@@ -192,8 +193,9 @@ const agendamentoController = {
     clienteAgendamentos: async (req, res) => {
         try {
             const usuario = req.usuario
-            const meuAgendamento = agendamentoModel.findOne({cliente: usuario})
-            console.log(meuAgendamento);
+            const meuAgendamento = await agendamentoModel.find({cliente: usuario})
+            console.log(meuAgendamento)
+            res.status(200).json({meuAgendamento});
 
         } catch (error) {
             res.json({error})
