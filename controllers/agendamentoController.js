@@ -193,8 +193,23 @@ const agendamentoController = {
     clienteAgendamentos: async (req, res) => {
         try {
             const usuario = req.usuario
-            const meuAgendamento = await agendamentoModel.find({cliente: usuario})
-            console.log(meuAgendamento)
+            const idMeuAgendamento = await agendamentoModel.find({cliente: usuario}).select("_id")
+
+            const meuAgendamento = []
+            const dadosAgendamento = []
+
+            for (let i = 0; i < idMeuAgendamento.length; i++) {
+                dadosAgendamento.push(await agendamentoModel.findOne({_id: idMeuAgendamento[i]}).populate("servico").populate("quadra"))
+                const [,,,,data] = dadosAgendamento[i].data[0].split('/')
+
+                meuAgendamento.push({
+                    hora: data,
+                    modalidade: dadosAgendamento[i].servico.modalidade,
+                    numero: dadosAgendamento[i].quadra.numero,
+                    transacao: dadosAgendamento[i].transacao,
+                    valor: dadosAgendamento[i].valor
+                })
+            }
             res.status(200).json({meuAgendamento});
 
         } catch (error) {
