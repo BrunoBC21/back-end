@@ -187,6 +187,17 @@ const agendamentoController = {
         } catch (error) {
             res.json(error)
         }
+    },
+
+    clienteAgendamentos: async (req, res) => {
+        try {
+            const usuario = req.usuario
+            const meuAgendamento = agendamentoModel.findOne({cliente: usuario})
+            console.log(meuAgendamento);
+
+        } catch (error) {
+            res.json({error})
+        }
     }
 }
 

@@ -18,4 +18,8 @@ router
     .route("/servico-quadra")
     .post((req, res)=> agendamentoController.associarQuadraServico(req, res));
 
+router
+    .route("/meus-agendamentos")
+    .post((req, res)=> agendamentoController.clienteAgendamentos(req, res));
+
 module.exports = router

@@ -9,9 +9,9 @@ const horarioController = {
                 inicio: req.body.inicio,
                 fim: req.body.fim,
             }
-            const horarioExistente = await horarioModel.findOne({horario});
+            const horarioExistente = await horarioModel.findOne();
             if(horarioExistente) {
-                return res.status(201).json({msg: "Horário criado com sucesso!"})
+                const apagarHorarioExistente = await horarioModel.deleteOne();
             }
             const resposta = await horarioModel.create(horario);
             res.status(201).json({msg: "Horário criado com sucesso"});
