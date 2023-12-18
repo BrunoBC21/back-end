@@ -30,10 +30,10 @@ const horarioController = {
                 horaFinal += 24
             }
             if ((horaAtual >= horaInicial) && (horaAtual < horaFinal)){
-                res.status(200).json({msg: true})
+                res.status(200).json({msg: true, horaInicio: horaInicial, horaFim: idHora.fim})
             }
             else {
-                res.status(200).json({msg: false})
+                res.status(200).json({msg: false, horaInicio: horaInicial, horaFim: idHora.fim})
             };
         } catch (error) {
             res.json(error)

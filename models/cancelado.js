@@ -1,9 +1,25 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const canceladoSchema = new Schema({
-    cancelado: {
+    data: {
+        type: String,
+        required: true
+    },
+    quadra: {
         type: mongoose.Types.ObjectId,
+        ref: "Quadra",
+        required: true
+    },
+    servico: {
+        type: mongoose.Types.ObjectId,
+        ref: "Servico",
+        required: true
+    },
+    cliente: {
+        type: mongoose.Types.ObjectId,
+        ref: "Cliente",
         required: true
     }
 }, {timestamps: true});

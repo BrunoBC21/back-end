@@ -200,12 +200,12 @@ const agendamentoController = {
 
             for (let i = 0; i < idMeuAgendamento.length; i++) {
                 dadosAgendamento.push(await agendamentoModel.findOne({_id: idMeuAgendamento[i]}).populate("servico").populate("quadra"))
-                const [,ano, mes, dia,hora] = dadosAgendamento[i].data[0].split('/')
+                const [semana,ano, mes, dia,hora] = dadosAgendamento[i].data[0].split('/')
                 const [,data] = dadosAgendamento[i].data[0].split('/')
 
                 meuAgendamento.push({
                     hora: hora,
-                    data: ano+'/'+mes+'/'+dia,
+                    data: semana+'/'+ano+'/'+mes+'/'+dia,
                     modalidade: dadosAgendamento[i].servico.modalidade,
                     numero: dadosAgendamento[i].quadra.numero,
                     transacao: dadosAgendamento[i].transacao,
