@@ -170,7 +170,7 @@ const clienteController = {
             const secret = process.env.SECRET
             const token = jwt.sign({subject: user.id, role: user.role}, secret, {expiresIn: "1d"})
 
-            res.status(200).json({msg: user.role});
+            res.status(200).json({msg: user.role, token: token});
 
         } catch (error) {
             res.status(500).json({ error: "Error login"});

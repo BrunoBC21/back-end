@@ -21,7 +21,7 @@ const autenticaoPermissao = (req, res, next)=> {
                     res.status(401).json("Token expirou");
                    
                 } 
-                else if (infor.role == "user"){
+                else if (infor.role == "admin"){
                        res.status(200);
                        req.usuario = {usuario: infor.subject}
                        next()
