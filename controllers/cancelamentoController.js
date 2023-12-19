@@ -12,7 +12,8 @@ const cancelamentoController = {
             const idQuadra = await quadraModel.findOne({numero: quadra}).select("_id");
             const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
-            const agendamentoCancelar = await agendamentoModel.find({data: dias, quadra: idQuadra, servico: idServico, cliente: usuario}).select("_id")
+            const agendamentoCancelar = await agendamentoModel.findOne({data: dias, quadra: idQuadra, servico: idServico, cliente: usuario}).select("_id")
+      
 
             const cancelar = await canceladoModel.create({data: dias, quadra: idQuadra, servico: idServico, cliente: usuario})
             const apagarAgendamento = await agendamentoModel.deleteOne({_id: agendamentoCancelar});
