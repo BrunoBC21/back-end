@@ -17,7 +17,7 @@ const provedor = {
             })
             const emailContent = `
                 <h2>Olá ${nome}!</h2>
-                <h3>Por favor, copie o código abaixo cole na aplicação e confirme:</h3>
+                <h3>Por favor, copie o código abaixo cole na aplicação:</h3>
                     <div style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; margin-right: 96.3%">
                         ${codigoConfirmacao}
                     </div>
