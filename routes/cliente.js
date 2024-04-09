@@ -2,8 +2,8 @@ const express = require("express")
 const router = express.Router()
 
 const clienteController = require("../controllers/clienteControllers")
-const autenticao = require("../middlewares/autenticao");
-const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
+const autenticaoUser = require("../middlewares/autenticaoUser");
+const autenticaoAdmin = require("../middlewares/autenticaoAdmin");
 
 router
     .route("/cliente")
@@ -29,8 +29,5 @@ router
     .route("/login")
     .post((req, res)=> clienteController.login(req, res))
 
-router
-    .route("/privilegio-cliente")
-    .post((req, res)=> clienteController.privilegioUsuario(req, res));
 
 module.exports = router

@@ -2,8 +2,8 @@ const express = require("express")
 const router = express.Router()
 
 const quadraController = require("../controllers/quadraControllers")
-const autenticao = require("../middlewares/autenticao");
-const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
+const autenticao = require("../middlewares/autenticaoUser");
+const autenticaoPermissao = require("../middlewares/autenticaoAdmin");
 
 router
     .route("/quadra")

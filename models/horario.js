@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const horarioSchema = new Schema({
-    dias: {
+    dia: {
         type: [Number],
-        required: true
+        required: true,
     },
 
     inicio: {
@@ -15,6 +15,24 @@ const horarioSchema = new Schema({
     fim: {
         type: Number,
         required: true
+    },
+
+    diaVariavel: {
+        type: Number,
+        required: true,
+        default: null
+    },
+
+    inicioVariavel: {
+        type: Number,
+        required: true,
+        default: null
+    },
+    
+    fimVariavel: {
+        type: Number,
+        required: true,
+        default: null
     }
 
 }, {timestamps: true});

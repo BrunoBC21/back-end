@@ -9,9 +9,9 @@ const agendamentoController = {
         try {
             const { data, transacao, quadra, servico,  horas} = req.body
             const cliente = req.usuario
-            console.log(cliente)
+            // console.log(cliente)
             //Calculando o preco total dos horários selecionados para o agendamento.
-            const idHorario = await horarioModel.findOne().select("_id")
+            //const idHorario = await horarioModel.findOne().select("_id")
             const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
             const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
 
@@ -24,7 +24,7 @@ const agendamentoController = {
                         data: data[0]+"/"+data[1]+"/"+horas[i],
                         valor: preco.preco,
                         transacao: transacao,
-                        horario: idHorario,
+                        //horario: idHorario,
                         quadra: idQuadra,
                         cliente: cliente,
                         servico: idServico
@@ -40,7 +40,7 @@ const agendamentoController = {
                     data: data[0]+"/"+data[1]+"/"+horas,
                     valor: preco.preco,
                     transacao: transacao,
-                    horario: idHorario,
+                    //horario: idHorario,
                     quadra: idQuadra,
                     cliente: cliente,
                     servico: idServico

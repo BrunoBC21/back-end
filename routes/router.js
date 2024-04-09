@@ -9,6 +9,8 @@ const quadraServico = require("./quadraServico");
 const cliente = require("./cliente");
 const confirmacaoEmail = require("./enviarEmail");
 const cancelar = require("./cancelamento");
+const permisao =  require("./permisao.js");
+const horarioDiaVariavel = require("./horarioDiaVariavel.js")
 
 router.use('/', cancelar);
 
@@ -24,6 +26,10 @@ router.use("/", quadra);
 
 router.use("/", agendamento);
 
-router.use("/", quadraServico)
+router.use("/", quadraServico);
+
+router.use('/', permisao);
+
+router.use('/', horarioDiaVariavel);
 
 module.exports = router;

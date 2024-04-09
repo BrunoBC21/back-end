@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const agendamentoController = require("../controllers/agendamentoController");
-const autenticao = require("../middlewares/autenticao");
-const autenticaoPermissao = require("../middlewares/autenticaoPermissao");
+const autenticaoUser = require("../middlewares/autenticaoUser");
+const autenticaoAdmin = require("../middlewares/autenticaoAdmin");
 
 router
     .route("/agendamento")
-    .post(autenticao, (req, res)=> agendamentoController.create(req, res))
-    .get(autenticaoPermissao, (req, res)=> agendamentoController.getQuadrasAgendadas(req, res));
+    .post(autenticaoUser, (req, res)=> agendamentoController.create(req, res))
+    .get(autenticaoAdmin, (req, res)=> agendamentoController.getQuadrasAgendadas(req, res));
 
 router
     .route("/quadras-disponiveis")
@@ -20,6 +20,6 @@ router
 
 router
     .route("/meus-agendamentos")
-    .post(autenticao, (req, res)=> agendamentoController.clienteAgendamentos(req, res));
+    .post(autenticaoUser, (req, res)=> agendamentoController.clienteAgendamentos(req, res));
 
 module.exports = router
