@@ -14,7 +14,7 @@ router
     .get((req, res)=> horarioController.get(req, res));
 
 router
-    .route("/modificar-horario")
-    .post((req, res)=> horarioController.alterarHorarioDia(req, res));
+    .route("/horario-variavel")
+    .post((req, res)=> horarioController.alterarHorario(req, res));
 
 module.exports = router

@@ -18,20 +18,17 @@ const horarioSchema = new Schema({
     },
 
     diaVariavel: {
-        type: Number,
-        required: true,
+        type: Date,
         default: null
     },
 
     inicioVariavel: {
         type: Number,
-        required: true,
         default: null
     },
     
     fimVariavel: {
         type: Number,
-        required: true,
         default: null
     }
 

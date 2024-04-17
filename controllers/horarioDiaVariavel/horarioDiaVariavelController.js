@@ -18,7 +18,7 @@ const horarioDiaVariavelController = {
         }
     },
 
-    alterarHorarioDia: async (req, res)=> {
+    alterarHorario: async (req, res)=> {
         try {
             const {dia, inicio, fim} = req.body
 
