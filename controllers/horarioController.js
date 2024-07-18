@@ -89,7 +89,8 @@ const horarioController = {
                 abertura > fechamento ? horaFechamento = moment(fechamento, 'HH').add(1, 'day') : horaFechamento = moment(fechamento, 'HH');
                 const horaAbertura = moment(abertura, 'HH');
 
-                const periodoFuncionamento = horaFechamento.diff(horaAbertura, 'hours');
+                const periodoFuncionamento = Math.abs(horaFechamento.diff(horaAbertura, 'hours'));
+              
                 let arrayPeriodoFuncionamento = [];
                 
                 for (let i = 0; i < periodoFuncionamento; i++) {
@@ -100,13 +101,14 @@ const horarioController = {
                         arrayPeriodoFuncionamento[i] = arrayPeriodoFuncionamento[i] - 24
                     }
                 }
-                estabelecimento.push(arrayPeriodoFuncionamento)
-                
-                console.log(arrayPeriodoFuncionamento)
-
-                
+                estabelecimento.push(arrayPeriodoFuncionamento)  
             });
-            res.json({horas: estabelecimento})
+            
+            const dias = estabelecimento.map((element, i) =>{
+                return {dia: i, horas: element}
+            });
+           
+            res.json({dias})
 
         } catch (error) {
             res.json({error})
@@ -143,23 +145,9 @@ const horarioController = {
             const diaSemana = new Date().getDay();
 
             documentos.forEach(async (documento) => {
-                //  if (dataAtual > documento.diaVariavel) {
-                //      await horarioModel.findOneAndUpdate({dia:documento.dia}, {diaVariavel: null, inicioVariavel: null, fimVariavel: null});
-                //  }
-                // Horário atual
-                    let agora = new Date().setHours(10,0,0,0)
-
-                    // Horário de 1h da manhã
-                    let umaDaManha = new Date();
-                    umaDaManha.setHours(1, 0, 0, 0); // Define a hora para 1h da manhã
-
-                    // Calcula a diferença em horas
-                    let diferencaEmMilissegundos = umaDaManha - agora;
-                    let diferencaEmHoras = diferencaEmMilissegundos / (1000 * 60 * 60); // Convertendo milissegundos para horas
-
-                    console.log('Diferença em horas:', diferencaEmHoras);
-
-               
+                  if (dataAtual > documento.diaVariavel) {
+                      await horarioModel.findOneAndUpdate({dia:documento.dia}, {diaVariavel: null, inicioVariavel: null, fimVariavel: null});
+                  }
             });
             return
 

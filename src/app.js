@@ -1,7 +1,7 @@
 // Importações
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 4000;
 const cors = require('cors')
 const jwt =  require('jsonwebtoken')
 require('dotenv').config()
