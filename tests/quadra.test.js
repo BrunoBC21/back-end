@@ -77,3 +77,49 @@ describe('Testes para quadraService', () => {
   });
 
 });
+
+describe('Testes para quadraRepository', () => {
+  
+  test('deve retornar erro ao buscar quadra se houver falha na operação', async () => {
+    quadraRepository.buscarQuadra.mockRejectedValue(new Error('Erro ao buscar quadra'));
+
+    try {
+        await quadraRepository.buscarQuadra({ numero: 1 });
+    } catch (error) {
+        expect(error.message).toBe('Erro ao buscar quadra');
+    }
+});
+
+
+
+
+  test('deve retornar erro ao criar quadra com número inválido', async () => {
+    const quadraInvalida = { numero: null };  // Quadra inválida
+
+    quadraRepository.criarQuadra.mockResolvedValue({ error: new Error('Número inválido') });
+
+    const resultado = await quadraRepository.criarQuadra(quadraInvalida);
+
+    expect(resultado).toEqual({ error: expect.any(Error) });
+});
+
+  test('deve buscar quadra pelo número com sucesso', async () => {
+    const quadra = { id: 1, numero: 1 };
+
+    quadraRepository.buscarQuadra.mockResolvedValue(quadra);
+
+    const resultado = await quadraRepository.buscarQuadra({ numero: 1 });
+
+    expect(quadraRepository.buscarQuadra).toHaveBeenCalledWith({ numero: 1 });
+    expect(resultado).toEqual(quadra);
+  });
+
+  test('deve retornar erro ao buscar quadra se houver falha na operação', async () => {
+    quadraRepository.buscarQuadra.mockRejectedValue(new Error('Erro ao buscar quadra'));
+
+    const resultado = await quadraRepository.buscarQuadra({ numero: 1 });
+
+    expect(resultado).toEqual({ error: expect.any(Error) });
+  });
+
+});

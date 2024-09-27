@@ -8,54 +8,46 @@ const formatoHora = require("../utils/formatoHora");
 const agendamentoController = {
     create: async (req, res) => {
         try {
-            const { data, transacao, quadra, servico,  hora} = req.body
-            const cliente = req.usuario
-            // console.log(cliente)
-            //Calculando o preco total dos horários selecionados para o agendamento.
-            //const idHorario = await horarioModel.findOne().select("_id")
-            const idQuadra  = await quadraModel.findOne({numero: quadra}).select("_id")
-            const idServico = await servicoModel.findOne({modalidade: servico}).select("_id");
-
-            const preco = await servicoModel.findOne({servico: idServico})
-            const valorTotalQuadras = hora.length * preco.preco
+            const { data, transacao, quadra, servico, hora } = req.body;
+            const cliente = req.usuario;
             
-
-            if(hora.length > 1) {
+            const idQuadra = await quadraModel.findOne({ numero: quadra }).select("_id");
+            const servicoEncontrado = await servicoModel.findOne({ modalidade: servico }).select("_id preco");
+    
+            const preco = servicoEncontrado.preco;  // Extraímos o preço aqui
+    
+            if (hora.length > 1) {
                 for (let i = 0; i < hora.length; i++) {
                     const agendamento = {
                         data: data[0],
                         hora: hora[i],
-                        valor: preco.preco,
+                        valor: preco,  // Usamos o valor de 'preco' aqui
                         transacao: transacao,
-                        //horario: idHorario,
                         quadra: idQuadra,
                         cliente: cliente,
-                        servico: idServico
-                    }
+                        servico: servicoEncontrado._id
+                    };
                     console.log(agendamento);
                     const resposta = await agendamentoModel.create(agendamento);
                 }
-                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"})
-            }
-
-            else {
+                res.status(201).json({ msg: "Parabéns, agendamento realizado com sucesso!" });
+            } else {
                 const agendamento = {
                     data: data[0],
                     hora: hora[0],
-                    valor: preco.preco,
+                    valor: preco,  // Usamos o valor de 'preco' aqui
                     transacao: transacao,
-                    //horario: idHorario,
                     quadra: idQuadra,
                     cliente: cliente,
-                    servico: idServico
-                }
+                    servico: servicoEncontrado._id
+                };
                 console.log(agendamento);
                 const resposta = await agendamentoModel.create(agendamento);
-                res.status(201).json({msg: "Parabéns, agendamento realizado com sucesso!"});
+                res.status(201).json({ msg: "Parabéns, agendamento realizado com sucesso!" });
             }
-            
+    
         } catch (error) {
-            return res.status(500).json({ message: error});
+            return res.status(500).json({ message: error.message });
         }
     },
 

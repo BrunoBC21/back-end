@@ -17,13 +17,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/beac', {
     console.log('Connected to the database');
   })
   .catch(err => {
-    console.error('Database connection error:', err);
+    console.log('Database connection error:', err);
   });
 
 app.use('/api/cliente', clienteRouter);
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.log(err.stack);
   res.status(500).send('Something went wrong!');
 });
 

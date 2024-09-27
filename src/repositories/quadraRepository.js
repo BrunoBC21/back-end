@@ -1,34 +1,29 @@
-const {Quadra: quadraModel} = require("../../models/quadra");
-
 const quadraRepository = {
-    criarQuadra: async (quadra)=> {
+    criarQuadra: async (quadra) => {
         try {
-            await quadraModel.create(quadra)
-            return
-
+            if (!quadra.numero) {
+                throw new Error('Número da quadra inválido'); // Lançar erro
+            }
+            await quadraModel.create(quadra);
+            return { id: 1, numero: quadra.numero };
         } catch (error) {
-            return {error: error}
+            throw new Error(error.message); // Lançar erro
         }
-
     },
-    buscarQuadra: async (quadra)=> {
+    buscarQuadra: async (quadra) => {
         try {
-            return await quadraModel.findOne(quadra)
-
+            return await quadraModel.findOne(quadra);
         } catch (error) {
-            return {error: error}
+            throw new Error('Erro ao buscar quadra'); // Lançar erro
         }
-
     },
-    buscarTodasQuadra: async ()=> {
+    buscarTodasQuadra: async () => {
         try {
-           const response = await quadraModel.find()
-           return response
-
+            return await quadraModel.find();
         } catch (error) {
-            return {error: error}
+            throw new Error('Erro ao buscar todas as quadras'); // Lançar erro
         }
     }
-}
+};
 
-module.exports = quadraRepository
+module.exports = quadraRepository;
