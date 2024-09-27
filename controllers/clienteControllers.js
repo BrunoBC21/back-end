@@ -2,62 +2,32 @@ const {Cliente: ClienteModel, Cliente} = require("../models/cliente");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { model } = require("mongoose");
+const clienteService = require("../src/services/clienteService")
+const validarCampos = require("../utils/validarCamposUtil")
 
 const clienteController = {
     create: async(req, res)=> {
         try {
-            // Criptografando senha de usuário
-            const saltRounds = bcrypt.genSalt(12);
-            const senhaHash = await bcrypt.hash(req.body.senha, 12);
-
             const cliente = {
                 nome: req.body.nome,
                 telefone: req.body.telefone,
                 email: req.body.email,
-                senha: senhaHash,
+                senha: req.body.senha,
                 //foto: req.body.foto,
             }
-            // Validações de email e telefone
-            const validarEmail = /\w+@\w+\.\w/;
-            const validarTelefone = /\(?\d{2}\)?\d{4,5}-?\d{4}/
             
-           // console.log(senhaHash)
-
-
-            if (validarEmail.test(cliente.email) == true && validarTelefone.test(cliente.telefone) == true && cliente.telefone.length < 15) {
-                const {telefone, email} = cliente
-                const user = await ClienteModel.findOne({telefone, email});
-
-                if (user) {
-                    res.status(409).json({error:"Email e número de telefone já existem no sistema"});
-                    return
-                }
-
-                else if (await ClienteModel.findOne({email})) {
-                
-                    res.status(409).json({error:"Email já existe no sistema"});
-                    return
-                }
-
-                else if (await ClienteModel.findOne({telefone})) {
-                    res.status(409).json({error:"Telefone já existe no sistema"});
-                    return
-                }
-                
-                const response = await ClienteModel.create(cliente);
-                res.status(201).json({response, msg:"Serviço criado com sucesso"})
-                
-
+            const validar = validarCampos.validar(cliente)
+            if (validar) {
+                return res.status(400).json({error: validar.error})
             }
-            else if ((validarTelefone.test(cliente.telefone) == false || cliente.telefone.length > 14) && validarEmail.test(cliente.email) == false) {
-                res.send("Email e número de telefone inválidos!")
+
+            const resultado = await clienteService.criarUsuario(cliente);
+    
+            if (resultado.status >= 400) {
+                return res.status(resultado.status).json({ error: resultado.error });
             }
-            else if (validarTelefone.test(cliente.telefone) == false || cliente.telefone.length > 14) {
-                res.send("Número de telefone inválido!");
-            }
-            else if (validarEmail.test(cliente.email) == false) {
-                res.send("Email inválido");
-            }
+    
+            return res.status(resultado.status).json({ response: resultado.response, msg: resultado.msg });
 
         } catch (error) {
             console.log(error);
@@ -67,44 +37,19 @@ const clienteController = {
 
     getAll: async(req, res) => {
         try {
-            const cliente = await ClienteModel.find();
-            res.json(cliente);
+            const user = await clienteService.todosUsuarios()
+            return res.status(200).json({msg: user.msg});
 
         } catch (error) {
             console.log(error);
         }
     },
 
-    getDados: async(req, res) => {
-        try {
-            const id = req.params.id;
-            const cliente = await ClienteModel.findById(id);
-
-            if(!cliente) {
-                res.status(404).json({msg: "Serviço não encontrado"})
-                return;
-            }
-
-            res.json(cliente)
-
-        } catch (error) {
-            
-        }
-    },
-
     delete: async(req, res) => {
         try {
-            const id = req.params.id;
-            const cliente = await ClienteModel.findById(id)
-
-            if(!cliente) {
-                res.status(404).json({msg: "Serviço não encontrado"})
-                return;
-            };
-
-            const deleteCliente = await ClienteModel.findByIdAndDelete(id);
-            res.status(200)
-                .json({deleteCliente, msg: "Serviço deletado com sucesso"});
+            const cliente = req.usuario
+            await clienteService.deletarUsuario(cliente)
+            return res.status(204).json({msg: "Usuário deletado"})
 
         } catch (error) {
             console.log(error)

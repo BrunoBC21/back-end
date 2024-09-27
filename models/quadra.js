@@ -5,7 +5,8 @@ const {Schema} = mongoose;
 const quadraSchema = new Schema({
     numero: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
 
     foto: {

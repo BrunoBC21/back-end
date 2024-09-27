@@ -1,12 +1,18 @@
 const { response } = require("express");
 const {QuadraServico: quadraServicoModel} = require("../models/quadraServico");
+const {Servico: servicoModel} = require("../models/servico");
+const {Quadra: quadraModel} = require("../models/quadra");
 
 const quadraServicoController = {
     create: async (req, res) => {
         try {
-            const quadraServicos = {
-                quadra: req.body.quadra,
-                servico: req.body.servico
+            const idQuadra = await quadraModel.findOne({numero: req.body.quadra}).select("_id")
+            const idServico = await servicoModel.findOne({modalidade: req.body.servico}).select("_id")
+            console.log(idServico)
+
+            const quadraServicos = {            
+                quadra: idQuadra,
+                servico: idServico
             }
             const response = await quadraServicoModel.create(quadraServicos);
             res.status(201).json({response, msg: "Serviço criado com sucesso!"});

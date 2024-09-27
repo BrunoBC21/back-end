@@ -7,7 +7,7 @@ const autenticaoPermissao = require("../middlewares/autenticaoAdmin");
 
 router
     .route("/quadra")
-    .post(autenticaoPermissao, (req, res) => quadraController.create(req, res))
+    .post((req, res) => quadraController.create(req, res))
     .get((req, res) => quadraController.getAll(req, res));
 
 router

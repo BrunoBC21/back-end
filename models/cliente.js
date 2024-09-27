@@ -28,8 +28,10 @@ const clienteSchema = new Schema ({
     },
 
     status: {
-        type: Boolean,
-        required: false
+        type: String,
+        required: true,
+        enum: ["ativo", "inativo"],
+        default: "ativo"
     },
 
     role: {

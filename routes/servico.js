@@ -6,7 +6,7 @@ const autenticaoAdmin = require("../middlewares/autenticaoAdmin");
 
 router 
     .route("/servico")
-    .post(autenticaoAdmin, (req, res) => clienteController.create(req, res))
+    .post((req, res) => clienteController.create(req, res))
     .get((req, res) => clienteController.getAll(req, res));
 
 module.exports = router

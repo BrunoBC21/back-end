@@ -3,8 +3,12 @@ const {Schema} = mongoose;
 
 const agendamentoSchema = new Schema({
     data: {
-        type: [String],
+        type: String,
         required: true,
+    },
+    hora: {
+        type: String,
+        required: true
     },
 
     valor: {
@@ -20,7 +24,7 @@ const agendamentoSchema = new Schema({
     horario: {
         type: mongoose.Types.ObjectId,
         ref:  "Horario",
-        required: true
+        required: false
     },
 
     quadra: {
@@ -43,8 +47,8 @@ const agendamentoSchema = new Schema({
     status: {
         type: String,
         required: true,
-        enum: ['D', 'A', 'C'],
-        default: 'D'
+        enum: ['disponivel', 'agendado', 'cancelado'],
+        default: 'agendado'
     }
 
 

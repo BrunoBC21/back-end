@@ -21,6 +21,10 @@ const canceladoSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: "Cliente",
         required: true
+    },
+    motivo: {
+        type: String,
+        required: true
     }
 }, {timestamps: true});
 

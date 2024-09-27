@@ -1,5 +1,4 @@
-const {Servico: ServicoModels} = require("../models/servico");
-
+const servicoService = require("../src/services/serivcoService");
 
 const servicoControllers = {
     create: async (req, res) => {
@@ -10,12 +9,8 @@ const servicoControllers = {
                 //recorrencia: req.body.recorrencia,
                 //descricao: req.body.descricao
             }
-            const servicoExistente = await ServicoModels.findOne({modalidade: servico.modalidade});
-            if (servicoExistente) {
-                return res.status(201).json({msg: "Servico criado com sucesso!"})
-            }
-            const response = await ServicoModels.create(servico);
-            res.status(201).json({msg: "Servico criado com sucesso"});
+            const response = await servicoService.criarServico(servico)
+            res.status(response.status).json({response: response.msg || response.error})
 
         } catch (error) {
             res.json(error);
@@ -24,9 +19,8 @@ const servicoControllers = {
 
     getAll: async(req, res) => {
         try {
-            const servicosId = await ServicoModels.find()
-            
-            res.json({servicosId});
+            const response = await servicoService.buscarTodosServicos()
+            res.status(response.status).json({response: response.msg || response.error});
             
         } catch (error) {
             res.json(error)

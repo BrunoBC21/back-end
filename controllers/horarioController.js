@@ -1,6 +1,6 @@
 const {Horario: horarioModel} = require("../models/horario");
 const {HorarioDiaVariavel: HorarioDiaVariavelModel} = require("../models/horarioDiaVariavel");
-const horarioDiaVariavelController = require("./horarioDiaVariavel/horarioDiaVariavelController");
+
 
 const horarioController = {
     create: async (req, res) => {
@@ -24,7 +24,7 @@ const horarioController = {
 
     calculoHoraEstabelecimento: async function (req, res) {
         try {
-            await this.restaurarHorarioPadrao();
+            await this.restaurarHorarioPadrao()
             const horaAtual = new Date().getHours()
             const diaSemana = new Date().getDay()
 
@@ -37,17 +37,7 @@ const horarioController = {
                 horaFinal += 24
             }
 
-            //Verificando se os dias variáveis estão ativos, se sim, aí é verificado se o estabelecimento está aberto de acordo com o dia variável.
-            if (horarioDiaVariavel[diaSemana].inicioVariavel != null) {
 
-                if ((horaAtual >= horarioDiaVariavel[diaSemana].inicioVariavel) && (horaAtual < horarioDiaVariavel[diaSemana].fimVariavel)) {
-                    return res.status(200).json({msg: true, horaInicio: horarioDiaVariavel[diaSemana].inicioVariavel, horaFim: horarioDiaVariavel[diaSemana].fimVariavel})
-                }
-
-                else {
-                    return res.status(200).json({msg: false, horaInicio: horarioDiaVariavel[diaSemana].inicioVariavel, horaFim: horarioDiaVariavel[diaSemana].fimVariavel})
-                }
-            }
 
             // Verificando se o estabelecimento está aberto no horário padrão que foi definido.
             if ((horaAtual >= horaInicial) && (horaAtual < horaFinal)){

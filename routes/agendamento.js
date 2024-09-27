@@ -5,9 +5,11 @@ const agendamentoController = require("../controllers/agendamentoController");
 const autenticaoUser = require("../middlewares/autenticaoUser");
 const autenticaoAdmin = require("../middlewares/autenticaoAdmin");
 
+
+
 router
-    .route("/agendamento")
-    .post(autenticaoUser, (req, res)=> agendamentoController.create(req, res))
+    .route("/agendar")
+    .post((req, res)=> agendamentoController.create(req, res))
     .get(autenticaoAdmin, (req, res)=> agendamentoController.getQuadrasAgendadas(req, res));
 
 router
