@@ -8,7 +8,7 @@ jest.mock("../models/quadra");
 
 describe("Agendamento Controller", () => {
     beforeEach(() => {
-        jest.clearAllMocks(); // Limpar mocks entre os testes
+        jest.clearAllMocks(); 
     });
 
     it("deve criar um agendamento com sucesso", async () => {
@@ -18,10 +18,8 @@ describe("Agendamento Controller", () => {
             select: jest.fn().mockResolvedValue({ _id: 'servicoId', preco: 100 })
         });
 
-        // Mockando o método create do Agendamento
         agendamentoModel.create = jest.fn(); // mockando o create para evitar a chamada ao banco
 
-        // Simulando a requisição do controller
         const req = {
             body: {
                 data: ['2024-09-30'],
